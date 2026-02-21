@@ -13,7 +13,9 @@ return [
     | a conventional file to locate the various service credentials.
     |
     */
-
+    'huggingface' => [
+        'token' => env('ZEROAI_MODEL'),
+    ],
     'postmark' => [
         'key' => env('POSTMARK_API_KEY'),
     ],
