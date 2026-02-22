@@ -26,3 +26,6 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+# hado dyawli ana user={ali}
+/.agents
+opencode.json

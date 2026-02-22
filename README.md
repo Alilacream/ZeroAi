@@ -8,7 +8,7 @@ ZERO<span style="color:#6C63FF;">AI</span>
 Rebuilding trust in the digital world through AI-powered synthetic media detection.
 </p>
 
-<img src="docs/zeroai-banner.png" width="850" style="border-radius:12px; box-shadow:0px 10px 30px rgba(0,0,0,0.15);" />
+<img src="docs/ZeroAi.png" width="850" style="border-radius:12px; box-shadow:0px 10px 30px rgba(0,0,0,0.15);" />
 
 </div>
 
@@ -135,14 +135,18 @@ We believe AI should empower society — not deceive it.
 
 ZEROAI operates on a **hybrid monetization model**:
 
-### 🔹 B2B API Licensing
+### 🔹 B2B API Licensing (Enterprise)
 
-- Social media platforms
-- News agencies
-- Cybersecurity firms
+- A subscription-based API for banks 
+- social media platforms
+- Cybersecurity firms and Law Firms
 - Financial institutions
 
-High-volume API access with enterprise SLAs.
+
+### 🔹 B2C API Licensing (Consumer)
+- Freenieum Browser utility (Free Card, Prenieum Card)
+- Mobile App (Pay for more utility)
+- Chrome extention (Pay to use)
 
 ### 🔹 Freemium Platform
 
@@ -180,6 +184,6 @@ High-volume API access with enterprise SLAs.
 <div align="center">
 
 <h3>ZEROAI</h3>
-<p>Because reality should never need verification — but now it does.</p>
+<p>Let’s restore trust in the media, one pixel at a time. </p>
 
 </div>

@@ -9,7 +9,7 @@ class HuggingFaceService
     public function analyzeText(string $text)
     {
         // url li ghadi ykon Ai fih hosted
-        $url = 'https://api-inference.huggingface.co/models/openai-community/roberta-base-openai-detector';
+        $url = env('ZEROAI_MODEL_URL');
         // had l code ka yshed responce ou ka ysiftha 3la chkel json
         $response = Http::withToken(env('ZEROAI_MODEL'))
             ->post($url, ['inputs' => $text,]);
