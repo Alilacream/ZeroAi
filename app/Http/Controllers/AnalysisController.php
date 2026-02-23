@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Support\Facades\Redirect;
 use App\Services\HuggingFaceService;
 use Illuminate\Http\Request;
 

@@ -1,8 +1,8 @@
 import { Head } from '@inertiajs/react';
-import ChatInterface from '@/components/Chatinterface';
 import AppLayout from '@/layouts/app-layout';
 import { seekerai } from '@/routes';
 import type { BreadcrumbItem } from '@/types';
+import ChatInterface from '@/Zeroai_Components/Chatinterface';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
