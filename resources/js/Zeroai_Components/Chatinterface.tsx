@@ -1,4 +1,3 @@
-import { stringify } from 'querystring';
 import { useForm } from '@inertiajs/react';
 import scan from '@/routes/scan';
 
