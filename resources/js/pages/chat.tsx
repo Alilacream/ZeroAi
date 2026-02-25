@@ -1,9 +1,9 @@
 import { usePage } from '@inertiajs/react';
 import { Head } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
-import { chat } from '@/routes';
 import type { BreadcrumbItem } from '@/types';
 import ChatInterface from '@/Zeroai_Components/Chatinterface';
+import { chat } from '@/routes';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
