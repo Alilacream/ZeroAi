@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChatbotController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -21,10 +22,6 @@ Route::get('chat', function () {
     return Inertia::render('chat');
 })->middleware(['auth', 'verified'])->name('chat');
 
-// ChatInterface Ui
-// Route::get('/truth-seeker', function(){
-// return Inertia::render(')
-// })
-// Analysis
+Route::post('chat', [ChatbotController::class, 'send']);
 
 require __DIR__.'/settings.php';
