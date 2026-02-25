@@ -1,6 +1,6 @@
 import { Link, usePage } from '@inertiajs/react';
 import { Sparkles } from 'lucide-react';
-import { dashboard, login, register, chat } from '@/routes';
+import { dashboard, login, register, seekerai } from '@/routes';
 export default function Navigation({
     canRegister = true,
 }: {
@@ -34,7 +34,7 @@ export default function Navigation({
                                         Dashboard
                                     </Link>
                                     <Link
-                                        href={chat()}
+                                        href={seekerai()}
                                         className="text-gray-300 transition-colors duration-200 hover:text-white"
                                     >
                                         Chat

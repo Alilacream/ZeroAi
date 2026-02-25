@@ -17,7 +17,7 @@ class HuggingFaceService
             ->withHeaders(['Content-Type' => 'application/json'])
             ->post($url, [
                 'inputs' => $text,
-                'options' => ['wait_for_model' => true],
+                'options' => ['wait_for_model' => true]
             ]);
 
         if ($response->successful()) {
