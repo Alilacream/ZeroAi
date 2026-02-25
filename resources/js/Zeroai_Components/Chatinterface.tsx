@@ -1,5 +1,4 @@
 import { useForm } from '@inertiajs/react';
-import scan from '@/routes/scan';
 
 interface ChatInterfaceProps {
     scanResult?: {
@@ -9,22 +8,13 @@ interface ChatInterfaceProps {
 }
 
 function ChatInterface({ scanResult }: ChatInterfaceProps) {
-    const { data, setData, post, processing } = useForm({
+    const { data, setData, processing } = useForm({
         content: '',
     });
 
-    const submit = (e: React.FormEvent) => {
-        e.preventDefault();
-        console.log('Submitting to:', scan.store.url());
-        post(scan.store.url(), {
-            preserveScroll: true,
-            onSuccess: () => console.log('Scan Complete!'),
-            onError: (errors) => console.log('Error:', errors),
-        });
+    const submit = () => {
+        console.log('hi');
     };
-
-    console.log('scanResult:', scanResult);
-
     return (
         <form onSubmit={submit} className="space-y-4">
             <textarea
