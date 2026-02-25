@@ -20,10 +20,10 @@ Route::get('dashboard', function () {
     return Inertia::render('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-// SeekerAI
-Route::get('seekerai', function () {
-    return Inertia::render('seekerai');
-})->middleware(['auth', 'verified'])->name('seekerai');
+// Chat
+Route::get('chat', function () {
+    return Inertia::render('chat');
+})->middleware(['auth', 'verified'])->name('chat');
 
 // ChatInterface Ui
 // Route::get('/truth-seeker', function(){
