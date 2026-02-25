@@ -1,4 +1,3 @@
-import { usePage } from '@inertiajs/react';
 import { Head } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 <<<<<<< HEAD:resources/js/pages/chat.tsx
@@ -17,13 +16,10 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function SeekerAI() {
-    const { props } = usePage();
-    const seekeraiData = props.seekerai;
-
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="SeekerAI" />
-            <ChatInterface scanResult={seekeraiData} />
+            <ChatInterface />
         </AppLayout>
     );
 }
