@@ -1,25 +1,25 @@
 import { usePage } from '@inertiajs/react';
 import { Head } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
-import { seekerai } from '@/routes';
+import { chat } from '@/routes';
 import type { BreadcrumbItem } from '@/types';
 import ChatInterface from '@/Zeroai_Components/Chatinterface';
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: 'SeekerAI',
-        href: seekerai().url,
+        title: 'Chat',
+        href: chat().url,
     },
 ];
 
-export default function SeekerAI() {
+export default function Chat() {
     const { props } = usePage();
-    const seekeraiData = props.seekerai;
+    const chatData = props.chat;
 
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="SeekerAI" />
-            <ChatInterface scanResult={seekeraiData} />
+            <Head title="Chat" />
+            <ChatInterface scanResult={chatData} />
         </AppLayout>
     );
 }

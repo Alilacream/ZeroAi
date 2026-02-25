@@ -1,7 +1,7 @@
 import { Link } from '@inertiajs/react';
 import { ArrowRight, PlayCircle } from 'lucide-react';
 import { motion } from 'motion/react';
-import { seekerai } from '@/routes';
+import { chat } from '@/routes';
 
 export function HeroSection() {
     return (
@@ -36,7 +36,7 @@ export function HeroSection() {
                             whileTap={{ scale: 0.95 }}
                             className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#3b82f6] to-[#2563eb] px-8 py-4 font-medium text-white transition-shadow duration-300 hover:shadow-2xl hover:shadow-[#3b82f6]/50"
                         >
-                            <Link href={seekerai()}>Try ZeroAI</Link>
+                            <Link href={chat()}>Try ZeroAI</Link>
                             <ArrowRight className="h-5 w-5" />
                         </motion.button>
 
