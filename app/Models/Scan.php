@@ -4,13 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-
 class Scan extends Model
 {
-    public function scan(Request $request)
-    {
+    public function scan(Request $request){
         $request->validate([
-            'content' => 'required|string|min:10|max:10000',
+            "content" => "required|string|min:10|max:10000"
         ]);
         $aiResult = $this->aiService->analyseText($request->input('content'));
         $scan = Scan::create([
@@ -19,7 +17,12 @@ class Scan extends Model
             'result' => $aiResult,
             'score' => $aiResult[0]['score'],
         ]);
-
-        return back()->with('scanResult', $scan);
+    return back()->with('scanResult', $scan);
     }
 }
+
+
+
+
+
+
