@@ -1,4 +1,3 @@
-import { usePage } from '@inertiajs/react';
 import { Head } from '@inertiajs/react';
 import AppLayout from '@/layouts/app-layout';
 import { chat } from '@/routes';
@@ -13,13 +12,13 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 export default function Chat() {
-    const { props } = usePage();
-    const chatData = props.chat;
-
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Chat" />
-            <ChatInterface scanResult={chatData} />
+            <div className="p-6">
+                <h1 className="mb-6 text-2xl font-bold text-white">AI Chat</h1>
+                <ChatInterface />
+            </div>
         </AppLayout>
     );
 }
