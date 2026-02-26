@@ -1,59 +1,66 @@
 import { Link } from '@inertiajs/react';
-import { ArrowRight, PlayCircle } from 'lucide-react';
+import { ArrowRight, Terminal } from 'lucide-react';
 import { motion } from 'motion/react';
 import { chat } from '@/routes';
 
 export function HeroSection() {
     return (
-        <section className="relative flex min-h-screen items-center justify-center overflow-hidden">
-            {/* Background Image with Overlay */}
-            <div className="absolute inset-0 z-0">
-                <img
-                    src="https://images.unsplash.com/photo-1764267758843-30975c8a7f38?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkYXJrJTIwZm9yZXN0JTIwbmlnaHQlMjBhdG1vc3BoZXJlfGVufDF8fHx8MTc3MTkzOTQwMXww&ixlib=rb-4.1.0&q=80&w=1080&utm_source=figma&utm_medium=referral"
-                    alt="Dark forest background"
-                    className="h-full w-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-b from-[#0a0e1a]/90 via-[#0a0e1a]/80 to-[#0a0e1a]" />
-            </div>
+        <section className="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden pt-16">
+            {/* Modern Subtle Grid Background (Replaces the forest image) */}
+            <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#4f4f4f15_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f15_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+
+            {/* Subtle top glow to anchor the logo */}
+            <div className="absolute top-0 left-1/2 z-0 h-[300px] w-[600px] -translate-x-1/2 rounded-full bg-zinc-500/10 blur-[100px]" />
 
             {/* Content */}
-            <div className="relative z-10 mx-auto max-w-5xl px-8 text-center">
+            <div className="relative z-10 mx-auto w-full max-w-5xl px-6 text-center md:px-8">
                 <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.8, ease: 'easeOut' }}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }} // Custom spring-like easing
+                    className="flex flex-col items-center"
                 >
-                    <h1 className="mb-6 bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-7xl font-bold text-transparent">
-                        ZeroAI
+                    {/* Trust Badge */}
+                    <div className="mb-8 flex items-center gap-2 rounded-full border border-zinc-800 bg-zinc-900/50 px-3 py-1 text-xs font-medium text-zinc-300 backdrop-blur-sm">
+                        <span className="flex h-2 w-2 rounded-full bg-emerald-500"></span>
+                        Model v2.0 is now live
+                    </div>
+
+                    <h1 className="mb-6 max-w-4xl text-5xl font-bold tracking-tight text-zinc-100 sm:text-6xl md:text-7xl lg:leading-[1.1]">
+                        Truth in the <br className="hidden sm:block" />
+                        <span className="text-zinc-500">synthetic era.</span>
                     </h1>
-                    <p className="mx-auto mb-12 max-w-3xl text-2xl leading-relaxed text-gray-300">
-                        Detect AI-generated content. Restore digital trust.
+
+                    <p className="mb-10 max-w-2xl text-lg text-zinc-400 sm:text-xl">
+                        ZeroAI provides cryptographic-level certainty for digital media. Detect generative anomalies, deepfakes, and synthetic text with absolute precision.
                     </p>
 
-                    <div className="flex items-center justify-center gap-6">
-                        <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="flex items-center gap-2 rounded-lg bg-gradient-to-r from-[#3b82f6] to-[#2563eb] px-8 py-4 font-medium text-white transition-shadow duration-300 hover:shadow-2xl hover:shadow-[#3b82f6]/50"
-                        >
-                            <Link href={chat()}>Try ZeroAI</Link>
-                            <ArrowRight className="h-5 w-5" />
-                        </motion.button>
+                    <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
+                        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                            <Link
+                                href={chat()}
+                                className="flex h-12 items-center gap-2 rounded-md bg-zinc-100 px-8 text-sm font-semibold text-zinc-950 transition-colors hover:bg-white"
+                            >
+                                Start Detecting
+                                <ArrowRight className="h-4 w-4" />
+                            </Link>
+                        </motion.div>
 
-                        <motion.button
-                            whileHover={{ scale: 1.05 }}
-                            whileTap={{ scale: 0.95 }}
-                            className="flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-8 py-4 font-medium text-white backdrop-blur-sm transition-all duration-300 hover:bg-white/20"
-                        >
-                            <PlayCircle className="h-5 w-5" />
-                            Learn More
-                        </motion.button>
+                        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                            <Link
+                                href="#documentation" // Or wherever this should point
+                                className="flex h-12 items-center gap-2 rounded-md border border-zinc-800 bg-transparent px-8 text-sm font-medium text-zinc-300 transition-colors hover:bg-zinc-900 hover:text-zinc-100"
+                            >
+                                <Terminal className="h-4 w-4 text-zinc-500" />
+                                Read Documentation
+                            </Link>
+                        </motion.div>
                     </div>
                 </motion.div>
             </div>
 
-            {/* Bottom gradient fade */}
-            <div className="absolute right-0 bottom-0 left-0 z-10 h-32 bg-gradient-to-t from-[#0a0e1a] to-transparent" />
+            {/* Bottom gradient fade to blend into the About section smoothly */}
+            <div className="pointer-events-none absolute right-0 bottom-0 left-0 z-10 h-40 bg-gradient-to-t from-zinc-950 to-transparent" />
         </section>
     );
 }
