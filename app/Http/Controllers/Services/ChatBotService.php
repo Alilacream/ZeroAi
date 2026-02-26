@@ -1,8 +1,7 @@
 <?php
-
-use function Pest\Laravel\post;
-
+// moshkila m3a had namespace.
 namespace App\Http\Controllers\Services;
+
 
 use Illuminate\Support\Facades\Http;
 
@@ -26,7 +25,7 @@ class ChatBotService
         $response = Http::withHeaders([
             'Authorization' => 'Bearer '.$this->apikey,
             'content_type' => 'application/json',
-        ])->post($this->baseUrl, '/chat/completions', [
+        ])->post($this->baseUrl, '/api/chat', [
             'model' => 'openrouter/free',
             'messages' => [
                 'role' => 'system',

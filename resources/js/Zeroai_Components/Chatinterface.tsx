@@ -40,7 +40,8 @@ function ChatInterface() {
             });
 
             const data = await response.json();
-
+            //ALI: Debugging
+            console.log(data);
             setMessages((prev) => {
                 const updated = [...prev];
                 const lastIndex = updated.length - 1;
