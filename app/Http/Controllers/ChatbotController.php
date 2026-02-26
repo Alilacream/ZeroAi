@@ -1,19 +1,24 @@
 <?php
-// this is an api, not a specific controller
+
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Services\ChatBotService;
+use Illuminate\Http\Request;
+
 class ChatbotController extends Controller
 {
-        public function send(Request $request) {
-        $message = $request->input('message');
-        // call Ai service
-        $response = ChatBotService::class->process($message);
-        //returns the response
-        return response()->json([
-            'reply' => $response
+    public function send(Request $request)
+    {
+        $request->validate([
+            'message' => 'required|string|max:5000',
         ]);
 
+        $message = $request->input('message');
+        $service = new ChatBotService;
+        $response = $service->process($message);
+
+        return response()->json([
+            'message' => $response,
+        ]);
     }
 }
