@@ -1,13 +1,13 @@
+import { FeaturesBento } from './utils/FeaturesBento';
+import { FinalCta } from './utils/FinalCta';
 import { Footer } from './utils/Footer';
 import { HeroSection } from './utils/HeroSection';
-import { FeaturesBento } from './utils/FeaturesBento';
-import { TechnicalSpecs } from './utils/TechnicalSpecs';
-import { FinalCta } from './utils/FinalCta';
 import Navigation from './utils/Navbar';
+import { TechnicalSpecs } from './utils/TechnicalSpecs';
 
 function Home() {
     return (
-        <div className="min-h-screen bg-zinc-950 text-zinc-50 font-sans antialiased selection:bg-zinc-800 selection:text-white">
+        <div className="min-h-screen bg-zinc-950 font-sans text-zinc-50 antialiased selection:bg-zinc-800 selection:text-white">
             <Navigation />
             <main>
                 <HeroSection />
