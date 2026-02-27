@@ -1,128 +1,63 @@
-import { useState, useRef, type FormEvent } from 'react';
+import { useState } from 'react';
+import { motion } from 'motion/react';
+import { Send, ScanLine, Paperclip } from 'lucide-react';
 
-interface Message {
-    role: 'user' | 'assistant';
-    content: string;
-}
-
-function ChatInterface() {
-    const [messages, setMessages] = useState<Message[]>([]);
-    const [input, setInput] = useState('');
-    const [isLoading, setIsLoading] = useState(false);
-    const messagesEndRef = useRef<HTMLDivElement>(null);
-
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-    };
-
-    const handleSubmit = async (e: FormEvent) => {
-        e.preventDefault();
-
-        if (!input.trim() || isLoading) return;
-
-        const userMessage = input.trim();
-        setInput('');
-        setIsLoading(true);
-
-        setMessages((prev) => [
-            ...prev,
-            { role: 'user', content: userMessage },
-            { role: 'assistant', content: 'AI is thinking...' },
-        ]);
-
-        try {
-            const response = await fetch('/api/chat', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ message: userMessage }),
-            });
-
-            const data = await response.json();
-            //ALI: Debugging
-            console.log(data);
-            setMessages((prev) => {
-                const updated = [...prev];
-                const lastIndex = updated.length - 1;
-
-                if (response.ok && data.message) {
-                    updated[lastIndex] = {
-                        role: 'assistant',
-                        content: data.message,
-                    };
-                } else {
-                    updated[lastIndex] = {
-                        role: 'assistant',
-                        content: 'AI not available.',
-                    };
-                }
-                return updated;
-            });
-        } catch {
-            setMessages((prev) => {
-                const updated = [...prev];
-                updated[updated.length - 1] = {
-                    role: 'assistant',
-                    content: 'AI not available.',
-                };
-                return updated;
-            });
-        } finally {
-            setIsLoading(false);
-            scrollToBottom();
-        }
-    };
+export default function ChatInterface() {
+    const [isScanning, setIsScanning] = useState(false);
 
     return (
-        <div className="flex h-[500px] flex-col rounded-lg border border-zinc-800 bg-zinc-950">
-            <div className="flex-1 space-y-4 overflow-y-auto p-4">
-                {messages.length === 0 && (
-                    <div className="flex h-full items-center justify-center text-zinc-500">
-                        Start a conversation...
+        <div className="mx-auto flex h-[calc(100vh-4rem)] max-w-4xl flex-col rounded-xl border border-zinc-800 bg-[#0a0a0a] shadow-2xl">
+
+            {/* Header */}
+            <div className="flex items-center justify-between border-b border-zinc-800/50 bg-zinc-950/50 px-6 py-4 backdrop-blur-md">
+                <div className="flex items-center gap-3">
+                    <div className="flex h-2 w-2 items-center justify-center rounded-full bg-emerald-500/20">
+                        <div className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
                     </div>
-                )}
-                {messages.map((msg, index) => (
-                    <div
-                        key={index}
-                        className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-                    >
-                        <div
-                            className={`max-w-[70%] rounded-lg px-4 py-2 ${
-                                msg.role === 'user'
-                                    ? 'bg-blue-600 text-white'
-                                    : 'bg-zinc-800 text-zinc-200'
-                            }`}
-                        >
-                            {msg.content}
-                        </div>
-                    </div>
-                ))}
-                <div ref={messagesEndRef} />
+                    <span className="text-sm font-medium text-zinc-300">Engine v2.0 Ready</span>
+                </div>
             </div>
 
-            <form
-                onSubmit={handleSubmit}
-                className="flex gap-2 border-t border-zinc-800 p-4"
-            >
-                <input
-                    type="text"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    placeholder="Type your message..."
-                    disabled={isLoading}
-                    className="flex-1 rounded-lg border border-zinc-700 bg-zinc-900 px-4 py-2 text-white placeholder-zinc-500 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none disabled:opacity-50"
-                />
-                <button
-                    type="submit"
-                    disabled={isLoading || !input.trim()}
-                    className="rounded-lg bg-blue-600 px-6 py-2 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                    {isLoading ? 'Sending...' : 'Send'}
-                </button>
-            </form>
+            {/* Chat History Area */}
+            <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                {/* Empty State / Welcome */}
+                <div className="flex h-full flex-col items-center justify-center text-center">
+                    <div className="mb-4 rounded-lg border border-zinc-800 bg-zinc-900/50 p-3">
+                        <ScanLine className="h-6 w-6 text-zinc-400" />
+                    </div>
+                    <h3 className="mb-2 text-lg font-semibold text-zinc-100">Initialize Scan</h3>
+                    <p className="max-w-sm text-sm text-zinc-500">
+                        Upload a video, image, or text snippet to begin cryptographic and synthetic anomaly detection.
+                    </p>
+                </div>
+            </div>
+
+            {/* Input Area */}
+            <div className="p-4">
+                <div className="relative flex items-end gap-2 rounded-xl border border-zinc-800 bg-zinc-900/50 p-2 focus-within:border-zinc-700 focus-within:ring-1 focus-within:ring-zinc-700">
+
+                    <button className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg text-zinc-400 transition-colors hover:bg-zinc-800 hover:text-zinc-100">
+                        <Paperclip className="h-5 w-5" />
+                    </button>
+
+                    <textarea
+                        rows={1}
+                        placeholder="Paste media URL or describe the analysis required..."
+                        className="max-h-32 min-h-[40px] w-full resize-none bg-transparent py-2.5 text-sm text-zinc-100 placeholder:text-zinc-600 focus:outline-none"
+                    />
+
+                    <motion.button
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-zinc-100 text-zinc-950 transition-colors hover:bg-white"
+                    >
+                        <Send className="h-4 w-4" />
+                    </motion.button>
+                </div>
+                <div className="mt-2 text-center text-xs text-zinc-600">
+                    ZeroAI may produce inaccurate reports. Verify critical cryptographic hashes independently.
+                </div>
+            </div>
         </div>
     );
 }
-
-export default ChatInterface;
