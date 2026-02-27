@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\ChatbotController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ScanController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -12,14 +14,20 @@ Route::get('/', function () {
 })->name('home');
 
 // Dashboard
-Route::get('dashboard', function () {
-    return Inertia::render('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('dashboard', [DashboardController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('dashboard');
+
+// Scans
+Route::post('scans', [ScanController::class, 'store'])
+    ->middleware(['auth', 'verified'])
+    ->name('scans.store');
 
 // Chat
 Route::get('chat', function () {
     return Inertia::render('chat');
-})->middleware(['auth', 'verified'])->name('chat');
+})->middleware(['auth', 'verified'])
+    ->name('chat');
 
 Route::post('chat', [ChatbotController::class, 'send']);
 

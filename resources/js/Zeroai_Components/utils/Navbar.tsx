@@ -1,5 +1,4 @@
 import { Link, usePage } from '@inertiajs/react';
-import { ShieldCheck } from 'lucide-react';
 import { dashboard, login, register, chat } from '@/routes';
 
 export default function Navigation({
@@ -15,8 +14,8 @@ export default function Navigation({
                 <div className="flex h-16 items-center justify-between">
                     {/* Logo */}
                     <Link href="/" className="flex items-center gap-2.5 group">
-                        <div className="flex h-8 w-8 items-center justify-center rounded bg-zinc-100 text-zinc-950 transition-transform group-hover:scale-105">
-                            <ShieldCheck className="h-5 w-5" strokeWidth={2.5} />
+                        <div className="flex h-8 w-8 items-center justify-center rounded bg-zinc-100 text-zinc-950 transition-transform group-hover:scale-105 font-bold leading-none text-lg">
+                            Z
                         </div>
                         <span className="text-lg font-semibold tracking-tight text-zinc-100">
                             ZeroAI

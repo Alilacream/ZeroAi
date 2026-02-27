@@ -1,7 +1,7 @@
 <?php
 // moshkila m3a had namespace.
-namespace App\Http\Controllers\Services;
 
+namespace App\Http\Controllers\Services;
 
 use Illuminate\Support\Facades\Http;
 
@@ -16,8 +16,6 @@ class ChatBotService
         $this->apikey = config('model.api_model');
         $this->baseUrl = config('model.api_model_url');
     }
-
-
 
     public function process(string $message): string
     {

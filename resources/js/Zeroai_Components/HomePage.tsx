@@ -1,9 +1,8 @@
+import { FinalCta } from './utils/FinalCta';
 import { Footer } from './utils/Footer';
 import { HeroSection } from './utils/HeroSection';
-import { FeaturesBento } from './utils/FeaturesBento';
-import { TechnicalSpecs } from './utils/TechnicalSpecs';
-import { FinalCta } from './utils/FinalCta';
 import Navigation from './utils/Navbar';
+import { TechnicalSpecs } from './utils/TechnicalSpecs';
 
 function Home() {
     return (
@@ -11,7 +10,6 @@ function Home() {
             <Navigation />
             <main>
                 <HeroSection />
-                <FeaturesBento />
                 <TechnicalSpecs />
                 <FinalCta />
             </main>

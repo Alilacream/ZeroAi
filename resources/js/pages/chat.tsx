@@ -14,9 +14,8 @@ const breadcrumbs: BreadcrumbItem[] = [
 export default function Chat() {
     return (
         <AppLayout breadcrumbs={breadcrumbs}>
-            <Head title="Chat" />
-            <div className="p-6">
-                <h1 className="mb-6 text-2xl font-bold text-white">AI Chat</h1>
+            <Head title="Workspace" />
+            <div className="absolute inset-0">
                 <ChatInterface />
             </div>
         </AppLayout>
