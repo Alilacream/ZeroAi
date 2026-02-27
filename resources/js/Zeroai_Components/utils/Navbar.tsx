@@ -1,7 +1,6 @@
 import { Link, usePage } from '@inertiajs/react';
-import { ShieldCheck } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 import { dashboard, login, register, chat } from '@/routes';
-
 export default function Navigation({
     canRegister = true,
 }: {
@@ -10,58 +9,60 @@ export default function Navigation({
     const { auth } = usePage().props;
 
     return (
-        <nav className="fixed top-0 right-0 left-0 z-50 border-b border-zinc-800/50 bg-zinc-950/80 backdrop-blur-md">
-            <div className="mx-auto max-w-7xl px-6 md:px-8">
-                <div className="flex h-16 items-center justify-between">
-                    {/* Logo */}
-                    <Link href="/" className="flex items-center gap-2.5 group">
-                        <div className="flex h-8 w-8 items-center justify-center rounded bg-zinc-100 text-zinc-950 transition-transform group-hover:scale-105">
-                            <ShieldCheck className="h-5 w-5" strokeWidth={2.5} />
+        <>
+            <nav className="fixed top-0 right-0 left-0 z-50 border-b border-white/10 bg-[#0a0e1a]/80 backdrop-blur-xl">
+                <div className="mx-auto max-w-7xl px-8">
+                    <div className="flex h-20 items-center justify-between">
+                        {/* Logo */}
+                        <div className="flex items-center gap-2">
+                            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-[#3b82f6] to-[#2563eb]">
+                                <Sparkles className="h-5 w-5 text-white" />
+                            </div>
+                            <span className="bg-gradient-to-r from-white to-gray-300 bg-clip-text text-xl font-bold text-transparent">
+                                ZeroAI
+                            </span>
                         </div>
-                        <span className="text-lg font-semibold tracking-tight text-zinc-100">
-                            ZeroAI
-                        </span>
-                    </Link>
 
-                    {/* Navigation Links */}
-                    <div className="flex items-center gap-6 text-sm font-medium">
-                        {auth.user ? (
-                            <>
-                                <Link
-                                    href={dashboard()}
-                                    className="text-zinc-400 transition-colors hover:text-zinc-100"
-                                >
-                                    Dashboard
-                                </Link>
-                                <Link
-                                    href={chat()}
-                                    className="text-zinc-400 transition-colors hover:text-zinc-100"
-                                >
-                                    Workspace
-                                </Link>
-                            </>
-                        ) : (
-                            <>
-                                <Link
-                                    href={login()}
-                                    className="text-zinc-400 transition-colors hover:text-zinc-100"
-                                >
-                                    Sign in
-                                </Link>
-
-                                {canRegister && (
+                        {/* Navigation Links */}
+                        <div className="flex items-center gap-8">
+                            {auth.user ? (
+                                <>
                                     <Link
-                                        href={register()}
-                                        className="rounded-md bg-zinc-100 px-4 py-2 text-zinc-950 transition-all hover:bg-white hover:ring-2 hover:ring-zinc-100/20 active:scale-95"
+                                        href={dashboard()}
+                                        className="text-gray-300 transition-colors duration-200 hover:text-white"
                                     >
-                                        Get Started
+                                        Dashboard
                                     </Link>
-                                )}
-                            </>
-                        )}
+                                    <Link
+                                        href={chat()}
+                                        className="text-gray-300 transition-colors duration-200 hover:text-white"
+                                    >
+                                        Chat
+                                    </Link>
+                                </>
+                            ) : (
+                                <>
+                                    <Link
+                                        href={login()}
+                                        className="text-gray-300 transition-colors duration-200 hover:text-white"
+                                    >
+                                        Log in
+                                    </Link>
+
+                                    {canRegister && (
+                                        <Link
+                                            href={register()}
+                                            className="rounded-lg bg-gradient-to-r from-[#3b82f6] to-[#2563eb] px-6 py-2.5 text-white transition-all duration-200 hover:scale-105 hover:shadow-lg hover:shadow-[#3b82f6]/50"
+                                        >
+                                            Register
+                                        </Link>
+                                    )}
+                                </>
+                            )}
+                        </div>
                     </div>
                 </div>
-            </div>
-        </nav>
+            </nav>
+        </>
     );
 }
