@@ -1,6 +1,6 @@
 import { Link, usePage } from '@inertiajs/react';
 import { ShieldCheck } from 'lucide-react';
-import { dashboard, login, register, chat } from '@/routes';
+import { dashboard, login, register, chat, home } from '@/routes';
 
 export default function Navigation({
     canRegister = true,
@@ -14,9 +14,12 @@ export default function Navigation({
             <div className="mx-auto max-w-7xl px-6 md:px-8">
                 <div className="flex h-16 items-center justify-between">
                     {/* Logo */}
-                    <Link href="/" className="flex items-center gap-2.5 group">
+                    <Link href="/" className="group flex items-center gap-2.5">
                         <div className="flex h-8 w-8 items-center justify-center rounded bg-zinc-100 text-zinc-950 transition-transform group-hover:scale-105">
-                            <ShieldCheck className="h-5 w-5" strokeWidth={2.5} />
+                            <ShieldCheck
+                                className="h-5 w-5"
+                                strokeWidth={2.5}
+                            />
                         </div>
                         <span className="text-lg font-semibold tracking-tight text-zinc-100">
                             ZeroAI
@@ -27,6 +30,12 @@ export default function Navigation({
                     <div className="flex items-center gap-6 text-sm font-medium">
                         {auth.user ? (
                             <>
+                                <Link
+                                    href={home()}
+                                    className="text-zinc-400 transition-colors hover:text-zinc-100"
+                                >
+                                    Home
+                                </Link>
                                 <Link
                                     href={dashboard()}
                                     className="text-zinc-400 transition-colors hover:text-zinc-100"

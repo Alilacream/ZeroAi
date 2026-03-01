@@ -1,8 +1,8 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { motion } from 'motion/react';
-import { register } from '@/routes';
-
+import { register, chat } from '@/routes';
 export function FinalCta() {
+    const auth = usePage().props;
     return (
         <section className="relative overflow-hidden border-t border-zinc-800/50 px-6 py-32 text-center md:px-8 md:py-48">
             {/* Subtle center glow */}
@@ -15,15 +15,23 @@ export function FinalCta() {
                     Ready to restore digital trust?
                 </h2>
                 <p className="mb-10 text-lg text-zinc-400">
-                    Join platforms and creators who use ZeroAI to verify their content and protect their audiences from synthetic manipulation.
+                    Join platforms and creators who use ZeroAI to verify their
+                    content and protect their audiences from synthetic
+                    manipulation.
                 </p>
 
-                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }} className="inline-block">
+                <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="inline-block"
+                >
                     <Link
-                        href={register()}
+                        href={auth.user ? chat() : register()}
                         className="flex h-12 items-center justify-center rounded-md bg-zinc-100 px-8 text-sm font-semibold text-zinc-950 transition-colors hover:bg-white"
                     >
-                        Create your free workspace
+                        {auth.user
+                            ? 'Go to WorkShop'
+                            : "Create you're first work shop"}
                     </Link>
                 </motion.div>
             </div>
