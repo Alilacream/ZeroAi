@@ -1,4 +1,3 @@
-import { FeaturesBento } from './utils/FeaturesBento';
 import { FinalCta } from './utils/FinalCta';
 import { Footer } from './utils/Footer';
 import { HeroSection } from './utils/HeroSection';
@@ -11,7 +10,6 @@ function Home() {
             <Navigation />
             <main>
                 <HeroSection />
-                <FeaturesBento />
                 <TechnicalSpecs />
                 <FinalCta />
             </main>

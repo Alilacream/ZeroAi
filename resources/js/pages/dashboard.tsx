@@ -1,202 +1,261 @@
-import { Head, usePage } from '@inertiajs/react';
-import {
-    Sparkles,
-    BrainCircuit,
-    Zap,
-    ArrowUpRight,
-    TrendingUp,
-} from 'lucide-react';
-import {
-    AreaChart,
-    Area,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    ResponsiveContainer,
-} from 'recharts';
+import { Head, usePage, Link } from '@inertiajs/react';
+import { ArrowUpRight } from 'lucide-react';
+import type { Variants } from 'motion/react';
+import { motion } from 'motion/react';
 import AppLayout from '@/layouts/app-layout';
+import { dashboard, chat } from '@/routes';
+import type { BreadcrumbItem, Auth } from '@/types';
 
-const chartData = [
-    { month: 'Jan', value: 10 },
-    { month: 'Feb', value: 20 },
-    { month: 'Mar', value: 35 },
-    { month: 'Apr', value: 50 },
-    { month: 'May', value: 70 },
+interface ScanHistoryItem {
+    id: string;
+    filename: string;
+    type: 'video' | 'image' | 'text';
+    date: string;
+    status: string;
+    score: number;
+}
+
+interface DashboardProps {
+    stats: {
+        total: number;
+        video: number;
+        image: number;
+        manipulated: number;
+    };
+    recentScans: ScanHistoryItem[];
+}
+
+interface PageProps extends DashboardProps {
+    auth: Auth;
+    [key: string]: unknown;
+}
+
+const breadcrumbs: BreadcrumbItem[] = [
+    {
+        title: 'Dashboard',
+        href: dashboard().url,
+    },
 ];
 
 export default function Dashboard() {
-    const { props } = usePage();
-    const userName = props.auth?.user?.name || 'Ali';
+    const { props } = usePage<PageProps>();
+    const { auth, stats, recentScans } = props;
+    const user = auth?.user;
+
+    const containerVariants: Variants = {
+        hidden: { opacity: 0 },
+        visible: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.04
+            }
+        }
+    };
+
+    const itemVariants: Variants = {
+        hidden: { opacity: 0, y: 10 },
+        visible: { 
+            opacity: 1, 
+            y: 0, 
+            transition: { duration: 0.5, ease: [0.19, 1, 0.22, 1] } 
+        }
+    };
 
     return (
-        <AppLayout>
+        <AppLayout breadcrumbs={breadcrumbs}>
             <Head title="Dashboard" />
-
-            <div className="animate-in space-y-8 p-6 duration-700 fade-in lg:p-10">
+            
+            <div className="flex h-full w-full flex-col overflow-y-auto bg-zinc-950 px-6 py-12 md:px-16">
+                
                 {/* Header Section */}
-                <header className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
-                    <div>
-                        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-4xl dark:text-white">
-                            Welcome back, {userName.split(' ')[0]}{' '}
-                            <span className="animate-pulse">👋</span>
+                <motion.div 
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mb-16 flex flex-col gap-6 md:flex-row md:items-end md:justify-between border-b border-zinc-900 pb-12"
+                >
+                    <div className="space-y-1">
+                        <h1 className="text-5xl font-bold tracking-tight text-zinc-100">
+                            Overview
                         </h1>
-                        <p className="mt-1 text-lg text-muted-foreground">
-                            Here is a look at your AI productivity today.
+                        <p className="text-sm text-zinc-500 font-medium">
+                            Forensic stream monitoring • {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}
                         </p>
                     </div>
-                    <button className="inline-flex items-center justify-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-all hover:bg-blue-500">
-                        <Sparkles size={18} />
+                    <Link 
+                        href={chat().url}
+                        className="group flex w-fit items-center gap-2 rounded-lg bg-zinc-100 px-6 py-3 text-sm font-bold text-zinc-950 transition-all hover:bg-white active:scale-[0.98]"
+                    >
                         New Analysis
-                    </button>
-                </header>
+                        <ArrowUpRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </Link>
+                </motion.div>
 
                 {/* KPI Grid */}
-                <div className="grid gap-6 md:grid-cols-3">
-                    {/* Card 1: AI Usage */}
-                    <div className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-slate-950">
-                        <div className="flex items-center justify-between">
-                            <div className="rounded-lg bg-blue-50 p-2 dark:bg-blue-900/20">
-                                <BrainCircuit
-                                    className="text-blue-600"
-                                    size={24}
-                                />
-                            </div>
-                            <span className="flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-1 text-xs font-medium text-emerald-600 dark:bg-emerald-900/20">
-                                <ArrowUpRight size={14} /> +12%
+                <motion.div 
+                    variants={containerVariants}
+                    initial="hidden"
+                    animate="visible"
+                    className="mb-16 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4"
+                >
+                    {[
+                        { label: 'Processed Evidence', value: stats.total, color: 'text-zinc-500' },
+                        { label: 'Video Streams', value: stats.video, color: 'text-zinc-500' },
+                        { label: 'Image Metadata', value: stats.image, color: 'text-zinc-500' },
+                        { label: 'Detected Threats', value: stats.manipulated, color: 'text-red-500' },
+                    ].map((item, i) => (
+                        <motion.div 
+                            key={i}
+                            variants={itemVariants}
+                            className="group flex flex-col rounded-xl border border-zinc-900 bg-zinc-900/10 p-8 transition-all hover:border-zinc-800 hover:bg-zinc-900/20"
+                        >
+                            <span className="mb-4 text-[10px] font-bold uppercase tracking-[0.25em] text-zinc-600 group-hover:text-zinc-500 transition-colors">
+                                {item.label}
                             </span>
+                            <span className={`text-4xl font-bold tracking-tighter transition-colors ${item.label.includes('Threats') && item.value > 0 ? 'text-red-500' : 'text-zinc-100'}`}>
+                                {item.value.toString().padStart(2, '0')}
+                            </span>
+                        </motion.div>
+                    ))}
+                </motion.div>
+
+                {/* Main Content Area */}
+                <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
+                    
+                    {/* Recent History Table */}
+                    <motion.div 
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2 }}
+                        className="lg:col-span-2 flex flex-col"
+                    >
+                        <div className="mb-8 flex items-center justify-between">
+                            <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-zinc-500">Evidence History</h2>
+                            <button className="text-[10px] font-bold uppercase tracking-widest text-zinc-700 hover:text-zinc-400 transition-colors">
+                                Export Stream
+                            </button>
                         </div>
-                        <div className="mt-4">
-                            <p className="text-sm font-medium tracking-wider text-muted-foreground uppercase">
-                                AI Usage
+                        
+                        <div className="overflow-x-auto rounded-xl border border-zinc-900">
+                            <table className="w-full text-left text-sm whitespace-nowrap">
+                                <thead className="bg-zinc-950 text-[10px] uppercase font-bold tracking-[0.1em] text-zinc-700">
+                                    <tr>
+                                        <th className="px-8 py-5">UID</th>
+                                        <th className="px-8 py-5">Source</th>
+                                        <th className="px-8 py-5">Confidence</th>
+                                        <th className="px-8 py-5 text-right">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-zinc-900">
+                                    {recentScans && recentScans.length > 0 ? recentScans.map((scan) => (
+                                        <tr key={scan.id} className="hover:bg-zinc-900/20 transition-colors group cursor-pointer">
+                                            <td className="px-8 py-6 font-mono text-[10px] text-zinc-600 group-hover:text-zinc-500 transition-colors">
+                                                {scan.id}
+                                            </td>
+                                            <td className="px-8 py-6">
+                                                <div className="flex flex-col">
+                                                    <span className="text-xs font-bold text-zinc-300 group-hover:text-zinc-100 transition-colors">{scan.filename}</span>
+                                                    <span className="text-[10px] font-medium text-zinc-600 uppercase tracking-wider">{scan.type}</span>
+                                                </div>
+                                            </td>
+                                            <td className="px-8 py-6">
+                                                <div className="flex items-center gap-4">
+                                                    <div className="h-[2px] w-12 overflow-hidden rounded-full bg-zinc-900">
+                                                        <motion.div 
+                                                            initial={{ width: 0 }}
+                                                            animate={{ width: `${scan.score}%` }}
+                                                            className={`h-full ${scan.score > 70 ? 'bg-zinc-100' : scan.score > 40 ? 'bg-zinc-500' : 'bg-red-900'}`}
+                                                        />
+                                                    </div>
+                                                    <span className="font-mono text-[11px] font-bold text-zinc-500">
+                                                        {scan.score.toFixed(0)}%
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td className="px-8 py-6 text-right">
+                                                <div className="flex items-center justify-end gap-2">
+                                                    <span className={`h-1 w-1 rounded-full ${
+                                                        scan.status?.toLowerCase().includes('fake') || scan.status?.toLowerCase().includes('manipulated')
+                                                            ? 'bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.5)]' 
+                                                            : 'bg-zinc-100'
+                                                    }`} />
+                                                    <span className={`text-[10px] font-bold uppercase tracking-widest ${
+                                                        scan.status?.toLowerCase().includes('fake') || scan.status?.toLowerCase().includes('manipulated')
+                                                            ? 'text-red-500' 
+                                                            : 'text-zinc-100'
+                                                    }`}>
+                                                        {scan.status || 'Verified'}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    )) : (
+                                        <tr>
+                                            <td colSpan={4} className="px-8 py-24 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-800">
+                                                Stream Empty
+                                            </td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </div>
+                    </motion.div>
+
+                    {/* Right Column: Security Profile / Actions */}
+                    <div className="flex flex-col gap-12">
+                        
+                        {/* Security Pulse Card */}
+                        <motion.div 
+                            initial={{ opacity: 0, scale: 0.98 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            transition={{ delay: 0.3 }}
+                            className="rounded-2xl border border-zinc-900 bg-zinc-900/5 p-8"
+                        >
+                            <div className="mb-10 flex items-center justify-between">
+                                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-600">Encrypted Session</span>
+                                <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                            </div>
+                            
+                            <h3 className="text-2xl font-bold text-zinc-100 tracking-tight mb-2">Forensic ID</h3>
+                            <p className="text-xs leading-relaxed text-zinc-500 font-medium">
+                                Active cryptographic verification layer established.
                             </p>
-                            <div className="mt-1 flex items-baseline gap-2">
-                                <h3 className="text-3xl font-bold tracking-tight italic">
-                                    26%
-                                </h3>
-                                <span className="text-xs text-muted-foreground">
-                                    of monthly limit
-                                </span>
+                            
+                            <div className="mt-12 space-y-6">
+                                <div className="flex flex-col gap-1 border-t border-zinc-900 pt-6">
+                                    <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-700">Identity</span>
+                                    <span className="text-sm font-bold text-zinc-300">{user?.name}</span>
+                                </div>
+                                <div className="flex flex-col gap-1 border-t border-zinc-900 pt-6">
+                                    <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-700">Access Key</span>
+                                    <span className="font-mono text-[10px] text-zinc-500">****-****-7721</span>
+                                </div>
                             </div>
-                            <div className="mt-4 h-2 w-full overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
-                                <div
-                                    className="h-full bg-gradient-to-r from-blue-600 to-indigo-500 transition-all duration-1000 ease-out"
-                                    style={{ width: '26%' }}
-                                />
-                            </div>
-                        </div>
+                        </motion.div>
+
+                        {/* Integration Quick Link */}
+                        <motion.div 
+                            initial={{ opacity: 0, x: 10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.4 }}
+                        >
+                            <Link 
+                                href="#" 
+                                className="group flex flex-col gap-2 rounded-2xl border border-zinc-900 p-8 transition-all hover:bg-zinc-900/10"
+                            >
+                                <div className="flex items-center justify-between">
+                                    <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 group-hover:text-zinc-400 transition-colors">API Keys</span>
+                                    <ArrowUpRight className="h-3.5 w-3.5 text-zinc-800 transition-colors group-hover:text-zinc-500" />
+                                </div>
+                                <p className="text-[11px] font-medium text-zinc-600 leading-relaxed group-hover:text-zinc-500 transition-colors">
+                                    Manage keys for external system integration.
+                                </p>
+                            </Link>
+                        </motion.div>
+
                     </div>
 
-                    {/* Card 2: Times Asked */}
-                    <div className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-slate-950">
-                        <div className="w-fit rounded-lg bg-amber-50 p-2 text-amber-600 dark:bg-amber-900/20">
-                            <Zap size={24} />
-                        </div>
-                        <div className="mt-4">
-                            <p className="text-sm font-medium tracking-wider text-muted-foreground uppercase">
-                                Total Queries
-                            </p>
-                            <h3 className="mt-1 text-3xl font-bold tracking-tight">
-                                1,284
-                            </h3>
-                            <p className="mt-1 text-xs text-muted-foreground">
-                                Updated 2 mins ago
-                            </p>
-                        </div>
-                    </div>
-
-                    {/* Card 3: Growth Metric */}
-                    <div className="group relative overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-slate-950">
-                        <div className="w-fit rounded-lg bg-indigo-50 p-2 text-indigo-600 dark:bg-indigo-900/20">
-                            <TrendingUp size={24} />
-                        </div>
-                        <div className="mt-4">
-                            <p className="text-sm font-medium tracking-wider text-muted-foreground uppercase">
-                                Growth Factor
-                            </p>
-                            <h3 className="mt-1 text-3xl font-bold tracking-tight">
-                                70%
-                            </h3>
-                            <p className="mt-1 text-xs font-medium text-emerald-600">
-                                On track for Q3 goals
-                            </p>
-                        </div>
-                    </div>
                 </div>
 
-                {/* Chart Section */}
-                <div className="rounded-3xl border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-950">
-                    <div className="mb-8 flex items-center justify-between">
-                        <div>
-                            <h3 className="text-xl font-bold text-slate-900 dark:text-white">
-                                AI Content Evasion Growth
-                            </h3>
-                            <p className="text-sm text-muted-foreground">
-                                Monthly performance trajectory
-                            </p>
-                        </div>
-                    </div>
-
-                    <div className="h-[350px] w-full">
-                        <ResponsiveContainer width="100%" height="100%">
-                            <AreaChart data={chartData}>
-                                <defs>
-                                    <linearGradient
-                                        id="colorValue"
-                                        x1="0"
-                                        y1="0"
-                                        x2="0"
-                                        y2="1"
-                                    >
-                                        <stop
-                                            offset="5%"
-                                            stopColor="#2563eb"
-                                            stopOpacity={0.3}
-                                        />
-                                        <stop
-                                            offset="95%"
-                                            stopColor="#2563eb"
-                                            stopOpacity={0}
-                                        />
-                                    </linearGradient>
-                                </defs>
-                                <CartesianGrid
-                                    strokeDasharray="3 3"
-                                    vertical={false}
-                                    stroke="#e2e8f0"
-                                />
-                                <XAxis
-                                    dataKey="month"
-                                    axisLine={false}
-                                    tickLine={false}
-                                    tick={{ fill: '#64748b', fontSize: 12 }}
-                                    dy={10}
-                                />
-                                <YAxis
-                                    axisLine={false}
-                                    tickLine={false}
-                                    tick={{ fill: '#64748b', fontSize: 12 }}
-                                />
-                                <Tooltip
-                                    contentStyle={{
-                                        borderRadius: '12px',
-                                        border: 'none',
-                                        boxShadow:
-                                            '0 10px 15px -3px rgba(0,0,0,0.1)',
-                                    }}
-                                />
-                                <Area
-                                    type="monotone"
-                                    dataKey="value"
-                                    stroke="#2563eb"
-                                    strokeWidth={3}
-                                    fillOpacity={1}
-                                    fill="url(#colorValue)"
-                                />
-                            </AreaChart>
-                        </ResponsiveContainer>
-                    </div>
-                </div>
             </div>
         </AppLayout>
     );

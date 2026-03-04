@@ -2,24 +2,44 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Scan extends Model
 {
-    public function scan(Request $request)
-    {
-        $request->validate([
-            'content' => 'required|string|min:10|max:10000',
-        ]);
-        $aiResult = $this->aiService->analyseText($request->input('content'));
-        $scan = Scan::create([
-            'user_id' => auth()->id(),
-            'content' => $request->input('content'),
-            'result' => $aiResult,
-            'score' => $aiResult[0]['score'],
-        ]);
+    use HasFactory;
 
-        return back()->with('scanResult', $scan);
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
+    protected $fillable = [
+        'user_id',
+        'type',
+        'filename',
+        'content',
+        'label',
+        'score',
+        'result',
+    ];
+
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array<string, string>
+     */
+    protected $casts = [
+        'result' => 'array',
+        'score' => 'float',
+    ];
+
+    /**
+     * Get the user that owns the scan.
+     */
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
     }
 }

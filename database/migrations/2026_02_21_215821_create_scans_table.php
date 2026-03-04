@@ -14,9 +14,12 @@ return new class extends Migration
         Schema::create('scans', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->text('content');
-            $table->json('result');
+            $table->string('type'); // image, video, text
+            $table->string('filename')->nullable();
+            $table->text('content')->nullable(); // for text scans or storage paths
+            $table->string('label')->nullable(); // fake, authentic
             $table->float('score');
+            $table->json('result')->nullable();
             $table->timestamps();
         });
     }

@@ -1,12 +1,13 @@
 import { Link } from '@inertiajs/react';
+import { Github, Linkedin, Twitter } from 'lucide-react';
+import type { Variants } from 'motion/react';
 import { motion } from 'motion/react';
-import { Github, Linkedin, ShieldCheck, Twitter } from 'lucide-react';
 
 export function Footer() {
     const currentYear = new Date().getFullYear();
 
     // Animation variants for that smooth, award-winning stagger effect
-    const containerVariants = {
+    const containerVariants: Variants = {
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
@@ -17,12 +18,12 @@ export function Footer() {
         },
     };
 
-    const itemVariants = {
+    const itemVariants: Variants = {
         hidden: { opacity: 0, y: 20 },
         visible: {
             opacity: 1,
             y: 0,
-            transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] },
+            transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] as [number, number, number, number] },
         },
     };
 
@@ -45,8 +46,8 @@ export function Footer() {
                     {/* Brand Column */}
                     <motion.div variants={itemVariants} className="lg:col-span-1">
                         <Link href="/" className="mb-6 flex items-center gap-2.5 group w-fit">
-                            <div className="flex h-8 w-8 items-center justify-center rounded bg-zinc-100 text-zinc-950 transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110">
-                                <ShieldCheck className="h-5 w-5" strokeWidth={2.5} />
+                            <div className="flex h-8 w-8 items-center justify-center rounded bg-zinc-100 text-zinc-950 transition-transform duration-500 group-hover:rotate-12 group-hover:scale-110 font-bold text-lg leading-none">
+                                Z
                             </div>
                             <span className="text-xl font-semibold tracking-tight text-zinc-100">
                                 ZeroAI
@@ -103,7 +104,6 @@ export function Footer() {
                     </p>
                     <div className="flex gap-6 text-xs text-zinc-500">
                         <Link href="#" className="transition-colors hover:text-zinc-300">Privacy Policy</Link>
-                        <Link href="#" className="transition-colors hover:text-zinc-300">Terms of Service</Link>
                     </div>
                 </motion.div>
             </motion.div>

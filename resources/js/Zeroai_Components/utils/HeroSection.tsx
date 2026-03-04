@@ -29,14 +29,12 @@ export function HeroSection() {
                     </div>
 
                     <h1 className="mb-6 max-w-4xl text-5xl font-bold tracking-tight text-zinc-100 sm:text-6xl md:text-7xl lg:leading-[1.1]">
-                        Truth in the <br className="hidden sm:block" />
-                        <span className="text-zinc-500">synthetic era.</span>
+                        Spot the fake. <br className="hidden sm:block" />
+                        <span className="text-zinc-500">Know what's real.</span>
                     </h1>
 
                     <p className="mb-10 max-w-2xl text-lg text-zinc-400 sm:text-xl">
-                        ZeroAI provides cryptographic-level certainty for
-                        digital media. Detect generative anomalies, deepfakes,
-                        and synthetic text with absolute precision.
+                        We make it easy to identify manipulated media. From deepfake face swaps to AI-generated images, see exactly what you're looking at.
                     </p>
 
                     <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-6">

@@ -14,12 +14,10 @@ export function FinalCta() {
 
             <div className="relative z-10 mx-auto max-w-3xl">
                 <h2 className="mb-6 text-4xl font-bold tracking-tight text-zinc-100 sm:text-5xl">
-                    Ready to restore digital trust?
+                    Ready to verify your media?
                 </h2>
                 <p className="mb-10 text-lg text-zinc-400">
-                    Join platforms and creators who use ZeroAI to verify their
-                    content and protect their audiences from synthetic
-                    manipulation.
+                    Join the creators and teams using our system to protect themselves and their audiences from fake content.
                 </p>
 
                 <motion.div
@@ -31,9 +29,7 @@ export function FinalCta() {
                         href={user.avatar ? chat() : register()}
                         className="flex h-12 items-center justify-center rounded-md bg-zinc-100 px-8 text-sm font-semibold text-zinc-950 transition-colors hover:bg-white"
                     >
-                        {user.avatar
-                            ? 'Go to WorkSpace'
-                            : "Create you're first Workspace"}
+                        Get started for free
                     </Link>
                 </motion.div>
             </div>
