@@ -1,13 +1,15 @@
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { ArrowRight, Terminal } from 'lucide-react';
 import { motion } from 'motion/react';
-import { chat } from '@/routes';
+import { chat, register } from '@/routes';
 
 export function HeroSection() {
+    const props = usePage().props;
+    const user = props.auth.user;
     return (
         <section className="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden pt-16">
             {/* Modern Subtle Grid Background (Replaces the forest image) */}
-            <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#4f4f4f15_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f15_1px,transparent_1px)] bg-[size:24px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]" />
+            <div className="absolute inset-0 z-0 bg-[linear-gradient(to_right,#4f4f4f15_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f15_1px,transparent_1px)] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] bg-[size:24px_24px]" />
 
             {/* Subtle top glow to anchor the logo */}
             <div className="absolute top-0 left-1/2 z-0 h-[300px] w-[600px] -translate-x-1/2 rounded-full bg-zinc-500/10 blur-[100px]" />
@@ -36,9 +38,12 @@ export function HeroSection() {
                     </p>
 
                     <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
-                        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                        <motion.div
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                        >
                             <Link
-                                href={chat()}
+                                href={user.avatar ? chat() : register()}
                                 className="flex h-12 items-center gap-2 rounded-md bg-zinc-100 px-8 text-sm font-semibold text-zinc-950 transition-colors hover:bg-white"
                             >
                                 Start Detecting
@@ -46,7 +51,10 @@ export function HeroSection() {
                             </Link>
                         </motion.div>
 
-                        <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                        <motion.div
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                        >
                             <Link
                                 href="#documentation" // Or wherever this should point
                                 className="flex h-12 items-center gap-2 rounded-md border border-zinc-800 bg-transparent px-8 text-sm font-medium text-zinc-300 transition-colors hover:bg-zinc-900 hover:text-zinc-100"
