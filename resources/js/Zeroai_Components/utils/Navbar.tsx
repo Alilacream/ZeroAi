@@ -27,6 +27,12 @@ export default function Navigation({
                         {auth.user ? (
                             <>
                                 <Link
+                                    href={home()}
+                                    className="text-zinc-400 transition-colors hover:text-zinc-100"
+                                >
+                                    Home
+                                </Link>
+                                <Link
                                     href={dashboard()}
                                     className="text-zinc-400 transition-colors hover:text-zinc-100"
                                 >
