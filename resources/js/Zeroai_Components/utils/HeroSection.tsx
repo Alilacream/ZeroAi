@@ -5,7 +5,7 @@ import { chat, register } from '@/routes';
 
 export function HeroSection() {
     const props = usePage().props;
-    const user = props.auth.user;
+    const auth = props.auth;
     return (
         <section className="relative flex min-h-[90vh] flex-col items-center justify-center overflow-hidden pt-16">
             {/* Modern Subtle Grid Background (Replaces the forest image) */}
@@ -34,7 +34,9 @@ export function HeroSection() {
                     </h1>
 
                     <p className="mb-10 max-w-2xl text-lg text-zinc-400 sm:text-xl">
-                        We make it easy to identify manipulated media. From deepfake face swaps to AI-generated images, see exactly what you're looking at.
+                        We make it easy to identify manipulated media. From
+                        deepfake face swaps to AI-generated images, see exactly
+                        what you're looking at.
                     </p>
 
                     <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-6">
@@ -43,7 +45,7 @@ export function HeroSection() {
                             whileTap={{ scale: 0.98 }}
                         >
                             <Link
-                                href={user.avatar ? chat() : register()}
+                                href={auth.user ? chat() : register()}
                                 className="flex h-12 items-center gap-2 rounded-md bg-zinc-100 px-8 text-sm font-semibold text-zinc-950 transition-colors hover:bg-white"
                             >
                                 Start Detecting

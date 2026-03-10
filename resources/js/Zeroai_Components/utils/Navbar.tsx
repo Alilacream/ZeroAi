@@ -7,14 +7,13 @@ export default function Navigation({
     canRegister?: boolean;
 }) {
     const { auth } = usePage().props;
-
     return (
         <nav className="fixed top-0 right-0 left-0 z-50 border-b border-zinc-800/50 bg-zinc-950/80 backdrop-blur-md">
             <div className="mx-auto max-w-7xl px-6 md:px-8">
                 <div className="flex h-16 items-center justify-between">
                     {/* Logo */}
-                    <Link href="/" className="flex items-center gap-2.5 group">
-                        <div className="flex h-8 w-8 items-center justify-center rounded bg-zinc-100 text-zinc-950 transition-transform group-hover:scale-105 font-bold leading-none text-lg">
+                    <Link href="/" className="group flex items-center gap-2.5">
+                        <div className="flex h-8 w-8 items-center justify-center rounded bg-zinc-100 text-lg leading-none font-bold text-zinc-950 transition-transform group-hover:scale-105">
                             Z
                         </div>
                         <span className="text-lg font-semibold tracking-tight text-zinc-100">
@@ -24,7 +23,7 @@ export default function Navigation({
 
                     {/* Navigation Links */}
                     <div className="flex items-center gap-6 text-sm font-medium">
-                        {auth.user ? (
+                        {auth?.user ? (
                             <>
                                 <Link
                                     href={dashboard()}
