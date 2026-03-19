@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('content')->nullable(); // for text scans or storage paths
             $table->string('label')->nullable(); // fake, authentic
             $table->float('score');
-            $table->json('result')->nullable();
+            $table->json('results')->nullable();
             $table->timestamps();
         });
     }

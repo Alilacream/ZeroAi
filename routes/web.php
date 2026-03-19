@@ -18,10 +18,6 @@ Route::get('dashboard', [DashboardController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('dashboard');
 
-// Scans
-Route::post('scans', [ScanController::class, 'store'])
-    ->middleware(['auth', 'verified'])
-    ->name('scans.store');
 
 // Chat
 Route::get('chat', function () {

@@ -22,7 +22,7 @@ class Scan extends Model
         'content',
         'label',
         'score',
-        'result',
+        'results',
     ];
 
     /**
@@ -31,7 +31,7 @@ class Scan extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'result' => 'array',
+        'results' => 'array',
         'score' => 'float',
     ];
 

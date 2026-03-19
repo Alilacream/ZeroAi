@@ -13,8 +13,13 @@ return [
     | a conventional file to locate the various service credentials.
     |
     */
+    // access token of alilacream
     'huggingface' => [
-        'token' => env('ZEROAI_MODEL'),
+        'token' => env('HF_TOKEN'),
+    ],
+    // endpoint url
+    'gradio' => [
+        'space' => env('ZEROAI_ENDPOINT')
     ],
     'postmark' => [
         'key' => env('POSTMARK_API_KEY'),
