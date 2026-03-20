@@ -25,7 +25,6 @@ Route::get('chat', function () {
 })->middleware(['auth', 'verified'])
     ->name('chat');
 
-Route::post('chat', [ChatbotController::class, 'send'])
-    ->middleware(['auth', 'verified']);
+Route::post('chat', [ChatbotController::class, 'send']);
 
 require __DIR__.'/settings.php';
