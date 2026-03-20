@@ -17,8 +17,7 @@ export function FinalCta() {
                     Ready to verify your media?
                 </h2>
                 <p className="mb-10 text-lg text-zinc-400">
-                    Join the creators and teams using our system to protect
-                    themselves and their audiences from fake content.
+                    Join the creators and teams using our system to protect themselves and their audiences from fake content.
                 </p>
 
                 <motion.div
@@ -27,7 +26,7 @@ export function FinalCta() {
                     className="inline-block"
                 >
                     <Link
-                        href={user ? chat() : register()}
+                        href={user.avatar ? chat() : register()}
                         className="flex h-12 items-center justify-center rounded-md bg-zinc-100 px-8 text-sm font-semibold text-zinc-950 transition-colors hover:bg-white"
                     >
                         Get started for free
