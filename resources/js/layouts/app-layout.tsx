@@ -3,7 +3,6 @@ import {
     Settings,
     LayoutDashboard,
     ScanLine,
-    History,
     Menu,
     X,
     LogOut,
