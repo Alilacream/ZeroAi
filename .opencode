@@ -1,0 +1,38 @@
+# ZeroAi_verify Project Skills Configuration
+
+This file defines the skills that should be automatically loaded when working on this Laravel 12 + Inertia + React project.
+
+## Skills to Load
+
+When working in specific domains, these skills should be activated:
+
+### Wayfinder Development
+- **Description**: Activates whenever referencing backend routes in frontend components. Use when importing from @/actions or @/routes, calling Laravel routes from TypeScript, or working with Wayfinder route functions.
+- **Trigger**: Working with Wayfinder route functions, importing from @/actions or @/routes
+
+### Pest Testing
+- **Description**: Tests applications using the Pest 4 PHP framework. Activates when writing tests, creating unit or feature tests, adding assertions, testing Livewire components, browser testing, debugging test failures, working with datasets or mocking.
+- **Trigger**: Writing tests, creating unit/feature tests, adding assertions
+
+### Inertia-React Development
+- **Description**: Develops Inertia.js v2 React client-side applications. Activates when creating React pages, forms, or navigation; using <Link>, <Form>, useForm, or router; working with deferred props, prefetching, or polling.
+- **Trigger**: Creating React pages, forms, or navigation; using Inertia.js v2 React components
+
+### TailwindCSS Development
+- **Description**: Styles applications using Tailwind CSS v4 utilities. Activates when adding styles, restyling components, working with gradients, spacing, layout, flex, grid, responsive design, dark mode, colors, typography, or borders.
+- **Trigger**: Adding styles, restyling components, working with Tailwind CSS v4
+
+## Automatic Skill Loading
+
+These skills will be automatically loaded based on context clues in your work:
+- When you mention routes, Wayfinder, @/actions, @/routes -> wayfinder-development
+- When you mention tests, testing, Pest, assertions -> pest-testing
+- When you mention React, Inertia, components, pages -> inertia-react-development
+- When you mention styling, CSS, Tailwind, classes -> tailwindcss-development
+
+## Usage Guidelines
+
+1. Always check if a relevant skill should be activated before starting work in a domain
+2. Skills provide domain-specific instructions and workflows that enhance productivity
+3. When in doubt, activate the skill - it won't hurt and may provide helpful guidance
+4. Refer to AGENTS.md for comprehensive guidelines on this project
