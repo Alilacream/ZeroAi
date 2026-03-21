@@ -101,6 +101,10 @@ export default function Register() {
                         </div>
 
                         <div className="text-center text-sm text-muted-foreground">
+                            Note: Email verification is required immediately
+                            after signup.
+                        </div>
+                        <div className="text-center text-sm text-muted-foreground">
                             Already have an account?{' '}
                             <TextLink href={login()} tabIndex={6}>
                                 Log in

@@ -105,7 +105,7 @@ export default function ChatInterface() {
                 // Set the scan result from the backend's response
                 setScanResult(scanData);
                 setStatus('complete');
-            } catch (error) {
+            } catch (error: any) {
                 console.error('Error analyzing media:', error.response?.data);
                 setStatus('error');
             }

@@ -36,6 +36,33 @@ export default function Login({
             >
                 {({ processing, errors }) => (
                     <>
+                        <div className="mb-6 text-center">
+                            <Button
+                                type="button"
+                                onClick={() =>
+                                    (window.location.href = '/auth/google')
+                                }
+                                className="flex w-full items-center justify-center gap-3 bg-red-600 text-white hover:bg-red-700"
+                            >
+                                Login with Google
+                            </Button>
+                        </div>
+                        <div className="mb-6 text-center">
+                            <Button
+                                type="button"
+                                onClick={() =>
+                                    (window.location.href = '/auth/github')
+                                }
+                                className="flex w-full items-center justify-center gap-3 bg-gray-800 text-white hover:bg-gray-700"
+                            >
+                                Login with GitHub (Demo unfinished)
+                            </Button>
+                        </div>
+                        <div className="mb-6 border-t border-gray-200 pt-4">
+                            <p className="text-center text-sm text-gray-500">
+                                Or login with email
+                            </p>
+                        </div>
                         <div className="grid gap-6">
                             <div className="grid gap-2">
                                 <Label htmlFor="email">Email address</Label>

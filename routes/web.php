@@ -2,15 +2,25 @@
 
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\SocialiteController;
+use App\Http\Controllers\VerifyController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
-use \App\Http\Controllers\VerifyController;
+
 Route::get('/', function () {
     return Inertia::render('welcome', [
         'canRegister' => Features::enabled(Features::registration()),
     ]);
 })->name('home');
+
+// Social Authentication Routes
+Route::get('auth/{provider}', [SocialiteController::class, 'redirectToProvider'])
+    ->where('provider', 'github|google')
+    ->name('auth.provider');
+Route::get('auth/{provider}/callback', [SocialiteController::class, 'handleProviderCallback'])
+    ->where('provider', 'github|google')
+    ->name('auth.provider.callback');
 
 // Dashboard
 Route::get('dashboard', [DashboardController::class, 'index'])
@@ -23,14 +33,14 @@ Route::get('chat', function () {
 })->middleware(['auth', 'verified'])
     ->name('chat');
 
-Route::post('chat', [ChatbotController::class, 'send']);
+Route::post('chat', [ChatbotController::class, 'send'])
+    ->middleware(['auth', 'verified']);
 
 // Verification route
-Route::get('verify', function() {
+Route::get('verify', function () {
     return Inertia::render('verify');
 })
-->middleware(['auth', 'verified'])
-;
+    ->middleware(['auth', 'verified']);
 Route::post('verify', VerifyController::class)
     ->name('verify');
 
