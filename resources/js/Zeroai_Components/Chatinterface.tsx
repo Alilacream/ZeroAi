@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { Client } from '@gradio/client';
 import {
     Image as ImageIcon,
     Video,
@@ -28,12 +28,11 @@ export default function ChatInterface() {
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [scanResult, setScanResult] = useState<ScanResult | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
-
     const [scanMessage, setScanMessage] = useState('Running forensic scan...');
 
     const compressImage = async (file: File): Promise<File> => {
         if (!file.type.startsWith('image/')) return file;
-
+        // ... (Keep your existing compression logic exactly as is) ...
         return new Promise((resolve) => {
             const reader = new FileReader();
             reader.readAsDataURL(file);
@@ -44,7 +43,6 @@ export default function ChatInterface() {
                     const canvas = document.createElement('canvas');
                     const MAX_SIZE = 1024;
                     let { width, height } = img;
-
                     if (width > height && width > MAX_SIZE) {
                         height *= MAX_SIZE / width;
                         width = MAX_SIZE;
@@ -52,27 +50,23 @@ export default function ChatInterface() {
                         width *= MAX_SIZE / height;
                         height = MAX_SIZE;
                     }
-
                     canvas.width = width;
                     canvas.height = height;
                     const ctx = canvas.getContext('2d');
                     ctx?.drawImage(img, 0, 0, width, height);
-
                     canvas.toBlob(
                         (blob) => {
-                            if (blob) {
+                            if (blob)
                                 resolve(
                                     new File([blob], file.name, {
                                         type: 'image/jpeg',
                                     }),
                                 );
-                            } else {
-                                resolve(file);
-                            }
+                            else resolve(file);
                         },
                         'image/jpeg',
                         0.85,
-                    ); // Compress down to 85% quality JPEG
+                    );
                 };
             };
         });
@@ -86,35 +80,51 @@ export default function ChatInterface() {
             setScanMessage('Optimizing media...');
 
             try {
-                // Compress image to drastically reduce upload time
                 const fileToUpload = await compressImage(originalFile);
-                setScanMessage('Connecting to engine...');
+                setScanMessage('Connecting to AI Engine...');
 
-                // Prepare form data
-                const formData = new FormData();
-                formData.append('file', fileToUpload);
+                // --- NEW LOGIC: Direct Gradio Client Call ---
 
-                // Send to our backend endpoint
-                const response = await axios.post('/api/scans', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                    },
+                // 1. Connect to YOUR space
+                // Note: We use the space name, not the full URL
+                const client = await Client.connect('Alilacream/truthseeker');
+
+                setScanMessage('Analyzing pixels (this may take 10-30s)...');
+
+                // 2. Predict
+                // The client automatically handles the submit -> poll -> complete flow!
+                const result = await client.predict('/predict_deepfake', {
+                    image: fileToUpload,
                 });
-                const scanData = response.data;
 
-                // Set the scan result from the backend's response
-                setScanResult(scanData);
+                console.log('Raw Gradio Result:', result);
+
+                // 3. Parse the result to match our UI structure
+                // Expected structure from your test: [{ label: "...", confidences: [...] }]
+                const data = result.data;
+
+                if (!data || data.length === 0) {
+                    throw new Error('Empty response from AI');
+                }
+
+                const wrapper = data[0];
+                const label = wrapper.label || 'Unknown';
+                const confidences = wrapper.confidences || [];
+
+                setScanResult({
+                    label,
+                    confidences,
+                });
+
                 setStatus('complete');
             } catch (error: any) {
-                console.error('Error analyzing media:', error.response?.data);
+                console.error('Error analyzing media:', error);
                 setStatus('error');
             }
         }
     };
 
-    const triggerFileInput = () => {
-        fileInputRef.current?.click();
-    };
+    const triggerFileInput = () => fileInputRef.current?.click();
 
     const resetScanner = () => {
         setSelectedFile(null);
@@ -123,10 +133,14 @@ export default function ChatInterface() {
         if (fileInputRef.current) fileInputRef.current.value = '';
     };
 
-    const isFake = scanResult?.label?.toLowerCase().includes('fake') || false;
-    const confidences = scanResult?.confidences || [];
+    // Updated logic to catch "AI_Generated" as well
+    const isFake =
+        scanResult?.label?.toLowerCase().includes('fake') ||
+        scanResult?.label?.toLowerCase().includes('ai') ||
+        scanResult?.label?.toLowerCase().includes('generated') ||
+        false;
 
-    // Find highest confidence to display
+    const confidences = scanResult?.confidences || [];
     let topConfidence = 0;
     if (confidences.length > 0) {
         topConfidence =
@@ -135,13 +149,12 @@ export default function ChatInterface() {
 
     return (
         <div className="flex h-full w-full items-center justify-center bg-zinc-950/50 p-6 md:p-12">
-            {/* Hidden File Input */}
             <input
                 type="file"
                 ref={fileInputRef}
                 onChange={handleFileSelect}
                 className="hidden"
-                accept="image/*,video/*"
+                accept="image/*"
             />
 
             <div className="w-full max-w-3xl">
@@ -162,11 +175,9 @@ export default function ChatInterface() {
                                 Upload Media for Analysis
                             </h2>
                             <p className="mx-auto mb-8 max-w-md leading-relaxed text-zinc-500">
-                                Select a video or image file to verify
-                                authenticity and check for digital manipulation.
-                                Supports MP4, MOV, JPEG, and PNG.
+                                Select an image to verify authenticity.
                             </p>
-                            <button className="rounded-xl bg-zinc-100 px-8 py-3 text-sm font-medium text-zinc-950 shadow-[0_0_15px_rgba(255,255,255,0.2)] transition-colors hover:bg-white">
+                            <button className="rounded-xl bg-zinc-100 px-8 py-3 text-sm font-medium text-zinc-950 shadow-[0_0_15px_rgba(255,255,255,0.2)] hover:bg-white">
                                 Browse Files
                             </button>
                         </motion.div>
@@ -181,11 +192,7 @@ export default function ChatInterface() {
                             className="flex flex-col items-center justify-center rounded-3xl border border-zinc-800 bg-zinc-900/40 p-16 text-center shadow-2xl backdrop-blur-sm"
                         >
                             <div className="relative mb-8 flex h-24 w-24 items-center justify-center rounded-2xl border border-zinc-700 bg-zinc-800">
-                                {selectedFile.type.startsWith('video') ? (
-                                    <Video className="h-10 w-10 text-zinc-300" />
-                                ) : (
-                                    <ImageIcon className="h-10 w-10 text-zinc-300" />
-                                )}
+                                <ImageIcon className="h-10 w-10 text-zinc-300" />
                                 <motion.div
                                     className="absolute inset-0 rounded-2xl border-2 border-zinc-400"
                                     animate={{
@@ -207,35 +214,19 @@ export default function ChatInterface() {
                                     {selectedFile.name}
                                 </span>
                             </p>
-
                             <div className="flex gap-2">
-                                <motion.div
-                                    animate={{ opacity: [0.3, 1, 0.3] }}
-                                    transition={{
-                                        repeat: Infinity,
-                                        duration: 1.2,
-                                        delay: 0,
-                                    }}
-                                    className="h-2 w-2 rounded-full bg-zinc-500"
-                                />
-                                <motion.div
-                                    animate={{ opacity: [0.3, 1, 0.3] }}
-                                    transition={{
-                                        repeat: Infinity,
-                                        duration: 1.2,
-                                        delay: 0.2,
-                                    }}
-                                    className="h-2 w-2 rounded-full bg-zinc-500"
-                                />
-                                <motion.div
-                                    animate={{ opacity: [0.3, 1, 0.3] }}
-                                    transition={{
-                                        repeat: Infinity,
-                                        duration: 1.2,
-                                        delay: 0.4,
-                                    }}
-                                    className="h-2 w-2 rounded-full bg-zinc-500"
-                                />
+                                {[0, 0.2, 0.4].map((delay, i) => (
+                                    <motion.div
+                                        key={i}
+                                        animate={{ opacity: [0.3, 1, 0.3] }}
+                                        transition={{
+                                            repeat: Infinity,
+                                            duration: 1.2,
+                                            delay,
+                                        }}
+                                        className="h-2 w-2 rounded-full bg-zinc-500"
+                                    />
+                                ))}
                             </div>
                             <p className="mt-4 text-sm text-zinc-500">
                                 {scanMessage}
@@ -243,7 +234,7 @@ export default function ChatInterface() {
                         </motion.div>
                     )}
 
-                    {status === 'error' && selectedFile && (
+                    {status === 'error' && (
                         <motion.div
                             key="error"
                             initial={{ opacity: 0, y: 20 }}
@@ -257,19 +248,19 @@ export default function ChatInterface() {
                                 Scan Failed
                             </h2>
                             <p className="mx-auto mb-8 max-w-md text-zinc-400">
-                                There was an error communicating with the
-                                analysis engine. Please try again.
+                                The AI engine timed out or encountered an error.
+                                Ensure the space is awake.
                             </p>
                             <button
                                 onClick={resetScanner}
-                                className="rounded-xl bg-zinc-800 px-8 py-3 text-sm font-medium text-zinc-200 transition-colors hover:bg-zinc-700 hover:text-white"
+                                className="rounded-xl bg-zinc-800 px-8 py-3 text-sm font-medium text-zinc-200 hover:bg-zinc-700"
                             >
                                 Try Again
                             </button>
                         </motion.div>
                     )}
 
-                    {status === 'complete' && selectedFile && scanResult && (
+                    {status === 'complete' && scanResult && (
                         <motion.div
                             key="complete"
                             initial={{ opacity: 0, y: 20 }}
@@ -278,24 +269,19 @@ export default function ChatInterface() {
                         >
                             <div className="mb-8 flex items-center gap-6 border-b border-zinc-800/50 pb-8">
                                 <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-2xl border border-zinc-700 bg-zinc-800">
-                                    {selectedFile.type.startsWith('video') ? (
-                                        <Video className="h-8 w-8 text-zinc-400" />
-                                    ) : (
-                                        <ImageIcon className="h-8 w-8 text-zinc-400" />
-                                    )}
+                                    <ImageIcon className="h-8 w-8 text-zinc-400" />
                                 </div>
                                 <div className="flex flex-col overflow-hidden">
                                     <h3 className="truncate text-xl font-medium text-zinc-100">
-                                        {selectedFile.name}
+                                        {selectedFile?.name}
                                     </h3>
                                     <span className="text-sm text-zinc-500">
                                         {(
-                                            selectedFile.size /
+                                            (selectedFile?.size || 0) /
                                             1024 /
                                             1024
                                         ).toFixed(2)}{' '}
-                                        MB •{' '}
-                                        {selectedFile.type || 'Unknown Format'}
+                                        MB
                                     </span>
                                 </div>
                             </div>
@@ -309,11 +295,9 @@ export default function ChatInterface() {
                                                 Manipulation Detected
                                             </h4>
                                             <p className="text-sm leading-relaxed text-red-200/70">
-                                                The media file exhibits
-                                                structural manipulation or
-                                                pixel-level inconsistencies
-                                                indicating synthetic generation
-                                                or deepfake alterations.
+                                                The media exhibits
+                                                inconsistencies indicating
+                                                synthetic generation.
                                             </p>
                                         </div>
                                     </div>
@@ -325,9 +309,6 @@ export default function ChatInterface() {
                                                 Analysis Passed
                                             </h4>
                                             <p className="text-sm leading-relaxed text-emerald-200/70">
-                                                The media file exhibits no
-                                                structural manipulation or
-                                                pixel-level inconsistencies.
                                                 High probability of authentic
                                                 origin.
                                             </p>
@@ -343,10 +324,7 @@ export default function ChatInterface() {
                                         <div
                                             className={`text-lg font-medium capitalize ${isFake ? 'text-red-400' : 'text-emerald-400'}`}
                                         >
-                                            {scanResult.label ||
-                                                (isFake
-                                                    ? 'Manipulated'
-                                                    : 'Authentic')}
+                                            {scanResult.label}
                                         </div>
                                     </div>
                                     <div className="rounded-2xl border border-zinc-800/50 bg-zinc-900/50 p-5">
@@ -364,10 +342,10 @@ export default function ChatInterface() {
 
                             <button
                                 onClick={resetScanner}
-                                className="flex w-full items-center justify-center gap-2 rounded-xl bg-zinc-800 py-3.5 text-sm font-medium text-zinc-200 transition-colors hover:bg-zinc-700 hover:text-white"
+                                className="flex w-full items-center justify-center gap-2 rounded-xl bg-zinc-800 py-3.5 text-sm font-medium text-zinc-200 hover:bg-zinc-700"
                             >
-                                <RefreshCcw className="h-4 w-4" />
-                                Scan Another File
+                                <RefreshCcw className="h-4 w-4" /> Scan Another
+                                File
                             </button>
                         </motion.div>
                     )}

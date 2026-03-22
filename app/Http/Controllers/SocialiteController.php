@@ -125,7 +125,8 @@ class SocialiteController extends Controller
         // Log the user in
         Auth::login($user, true);
 
+        request()->session()->regenerate();
         // Redirect to dashboard
-        return redirect()->intended('/dashboard');
+        return redirect()->intended('/');
     }
 }
