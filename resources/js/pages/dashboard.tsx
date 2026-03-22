@@ -9,7 +9,6 @@ import type { BreadcrumbItem, Auth } from '@/types';
 interface ScanHistoryItem {
     id: string;
     filename: string;
-    type: 'video' | 'image' | 'text' | null;
     date: string;
     status: string;
     score: number;
@@ -200,10 +199,6 @@ export default function Dashboard() {
                                                         <div className="flex flex-col">
                                                             <span className="text-xs font-bold text-zinc-300 transition-colors group-hover:text-zinc-100">
                                                                 {scan.filename}
-                                                            </span>
-                                                            <span className="text-[10px] font-medium tracking-wider text-zinc-600 uppercase">
-                                                                {scan.type ||
-                                                                    'UNKNOWN'}
                                                             </span>
                                                         </div>
                                                     </td>
