@@ -17,12 +17,11 @@ class Scan extends Model
      */
     protected $fillable = [
         'user_id',
-        'type',
         'filename',
-        'content',
         'label',
-        'score',
-        'results',
+        'confidence_score',
+        'full_result',
+        'type'
     ];
 
     /**
@@ -31,8 +30,8 @@ class Scan extends Model
      * @var array<string, string>
      */
     protected $casts = [
-        'results' => 'array',
-        'score' => 'float',
+        'full_result' => 'array',
+        'confidence_score' => 'float',
     ];
 
     /**

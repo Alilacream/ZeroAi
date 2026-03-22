@@ -104,7 +104,13 @@ class SocialiteController extends Controller
             // User exists with same email but different provider (or no provider) - link account
             $user = $existingUserByEmail;
             $user->{$provider.'_id'} = $providerUser->getId();
-            $user->save();
+             if (is_null($user->email_verified_at)) {
+                $user->email_verified_at = now();
+                $user->save();
+            } else {
+                // Just save the provider ID if already verified
+                $user->save();
+            }
         } else {
             // New user - create account
             $user = User::create([

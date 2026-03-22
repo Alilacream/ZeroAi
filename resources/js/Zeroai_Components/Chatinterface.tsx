@@ -116,6 +116,46 @@ export default function ChatInterface() {
                     confidences,
                 });
 
+                const topConf =
+                    confidences.length > 0
+                        ? Math.max(
+                              ...confidences.map(
+                                  (c: Confidence) => c.confidence,
+                              ),
+                          )
+                        : 0;
+
+                const getCsrfToken = () => {
+                    const value = `; ${document.cookie}`;
+                    const parts = value.split(`; XSRF-TOKEN=`);
+                    if (parts.length === 2)
+                        return decodeURIComponent(
+                            parts.pop().split(';').shift(),
+                        );
+                    return null;
+                };
+                const csrf = getCsrfToken();
+                fetch('/api/scans/history', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Accept: 'application/json',
+                        'X-XSRF-TOKEN': csrf || '',
+                    },
+                    body: JSON.stringify({
+                        filename: originalFile.name,
+
+                        type: originalFile.type.startsWith('video')
+                            ? 'video'
+                            : 'image', // 👈 Add this
+                        label: label,
+                        confidence_score: topConf,
+                        full_result: confidences,
+                    }),
+                }).catch((err) =>
+                    console.error('Failed to save scan history:', err),
+                );
+
                 setStatus('complete');
             } catch (error: any) {
                 console.error('Error analyzing media:', error);

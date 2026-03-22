@@ -14,12 +14,12 @@ class DashboardController extends Controller
     public function index(): Response
     {
         $user = Auth::user();
-        
+
         // Fetch real stats
         $totalScans = $user->scans()->count();
         $videoScans = $user->scans()->where('type', 'video')->count();
         $imageScans = $user->scans()->where('type', 'image')->count();
-        
+
         // Find manipulated count (where label contains 'fake')
         $manipulatedCount = $user->scans()
             ->where('label', 'like', '%fake%')
@@ -37,7 +37,7 @@ class DashboardController extends Controller
                     'type' => $scan->type,
                     'date' => $scan->created_at->diffForHumans(),
                     'status' => $scan->label,
-                    'score' => $scan->score,
+                    'score' => $scan->confidence_score,
                 ];
             });
 

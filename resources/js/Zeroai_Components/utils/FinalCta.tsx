@@ -27,7 +27,7 @@ export function FinalCta() {
                     className="inline-block"
                 >
                     <Link
-                        href={auth.user ? chat() : register()}
+                        href={auth.user ? '/chat' : register()}
                         className="flex h-12 items-center justify-center rounded-md bg-zinc-100 px-8 text-sm font-semibold text-zinc-950 transition-colors hover:bg-white"
                     >
                         Get started for free
