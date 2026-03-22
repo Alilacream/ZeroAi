@@ -21,7 +21,6 @@ class Scan extends Model
         'label',
         'confidence_score',
         'full_result',
-        'type'
     ];
 
     /**

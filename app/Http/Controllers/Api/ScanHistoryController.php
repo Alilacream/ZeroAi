@@ -27,7 +27,6 @@ class ScanHistoryController extends Controller
         'label' => $request->validated('label'),
         'confidence_score' => $request->validated('confidence_score'),
         'full_result' => $request->validated('full_result'),
-        'type' => $request->validated('type'),
     ]);
 
     return response()->json([

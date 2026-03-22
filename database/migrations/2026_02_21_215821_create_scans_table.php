@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('label');
             $table->float('confidence_score');
             $table->json('full_result')->nullable();
+            $table->string('type')->nullable(); // 'video', 'image', 'text', or null
             $table->timestamps();
         });
     }
