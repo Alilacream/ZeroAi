@@ -1,5 +1,4 @@
 <?php
-
 use App\Models\Scan;
 
 describe('Scan History API', function () {

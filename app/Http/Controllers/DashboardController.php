@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -40,6 +41,12 @@ class DashboardController extends Controller
                     'score' => $scan->confidence_score,
                 ];
             });
+            // In DashboardController@index(), before return:
+            Log::info('Dashboard Debug', [
+            'user_id' => $user?->id,
+            'scans_count' => $user?->scans()->count(),
+            'recent_scans' => $recentScans->take(2)->toArray(),
+            ]);
 
         return Inertia::render('dashboard', [
             'stats' => [

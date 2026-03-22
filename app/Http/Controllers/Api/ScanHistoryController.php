@@ -10,14 +10,14 @@ use Illuminate\Http\Request;
 
 class ScanHistoryController extends Controller
 {
- public function store(StoreScanRequest $request): JsonResponse
-{
+    public function store(StoreScanRequest $request): JsonResponse
+    {
     // Explicitly get the user from the global auth helper if request->user() fails
     $user = auth()->user();
 
     if (!$user) {
         // Optional: Log this to see if it's still happening
-        \Log::warning('Scan saved without user!');
+        Log::warning('Scan saved without user!');
         // For now, we allow it, but it won't show on dashboard until fixed
     }
 
@@ -36,7 +36,8 @@ class ScanHistoryController extends Controller
         'debug_user_id' => $user?->id, // Check console to confirm ID is sent back
     ], 201);
 
-}    public function index(Request $request): JsonResponse
+    }
+    public function index(Request $request): JsonResponse
     {
         $scans = Scan::query()
             ->when($request->user(), fn ($query) => $query->where('user_id', $request->user()->id))
@@ -47,16 +48,6 @@ class ScanHistoryController extends Controller
         return response()->json([
             'scans' => $scans,
         ]);
-    }    public function index(Request $request): JsonResponse
-    {
-        $scans = Scan::query()
-            ->when($request->user(), fn ($query) => $query->where('user_id', $request->user()->id))
-            ->orderByDesc('created_at')
-            ->limit(50)
-            ->get();
 
-        return response()->json([
-            'scans' => $scans,
-        ]);
     }
 }
