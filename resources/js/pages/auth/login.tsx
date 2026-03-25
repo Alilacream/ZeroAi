@@ -55,7 +55,7 @@ export default function Login({
                                 }
                                 className="flex w-full items-center justify-center gap-3 bg-gray-800 text-white hover:bg-gray-700"
                             >
-                                Login with GitHub (Demo unfinished)
+                                Login with GitHub{' '}
                             </Button>
                         </div>
                         <div className="mb-6 border-t border-gray-200 pt-4">
