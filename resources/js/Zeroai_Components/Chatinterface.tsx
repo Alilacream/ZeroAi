@@ -1,7 +1,6 @@
 import { Client } from '@gradio/client';
 import {
     Image as ImageIcon,
-    Video,
     FileUp,
     RefreshCcw,
     CheckCircle,
@@ -157,7 +156,7 @@ export default function ChatInterface() {
                 );
 
                 setStatus('complete');
-            } catch (error: any) {
+            } catch (error) {
                 console.error('Error analyzing media:', error);
                 setStatus('error');
             }
