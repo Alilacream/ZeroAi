@@ -33,7 +33,7 @@ class DashboardController extends Controller
             ->get()
             ->map(function ($scan) {
                 return [
-                    'id' => 'SCN-' . $scan->id,
+                    'id' => 'SCN-'.$scan->id,
                     'filename' => $scan->filename ?? 'Unknown',
                     'type' => $scan->type,
                     'date' => $scan->created_at->diffForHumans(),
@@ -41,12 +41,12 @@ class DashboardController extends Controller
                     'score' => $scan->confidence_score,
                 ];
             });
-            // In DashboardController@index(), before return:
-            Log::info('Dashboard Debug', [
+        // In DashboardController@index(), before return:
+        Log::info('Dashboard Debug', [
             'user_id' => $user?->id,
             'scans_count' => $user?->scans()->count(),
             'recent_scans' => $recentScans->take(2)->toArray(),
-            ]);
+        ]);
 
         return Inertia::render('dashboard', [
             'stats' => [

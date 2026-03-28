@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
             $table->string('filename');
+            $table->string('type')->nullable(); // 'video', 'image', 'text', or null
             $table->string('label');
             $table->float('confidence_score');
             $table->json('full_result')->nullable();
-            $table->string('type')->nullable(); // 'video', 'image', 'text', or null
             $table->timestamps();
         });
     }

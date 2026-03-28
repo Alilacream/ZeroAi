@@ -1,5 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
-import { dashboard, login, register, chat } from '@/routes';
+import { dashboard, login, register, chat, verify } from '@/routes';
 
 export default function Navigation({
     canRegister = true,
@@ -13,8 +13,8 @@ export default function Navigation({
             <div className="mx-auto max-w-7xl px-6 md:px-8">
                 <div className="flex h-16 items-center justify-between">
                     {/* Logo */}
-                    <Link href="/" className="flex items-center gap-2.5 group">
-                        <div className="flex h-8 w-8 items-center justify-center rounded bg-zinc-100 text-zinc-950 transition-transform group-hover:scale-105 font-bold leading-none text-lg">
+                    <Link href="/" className="group flex items-center gap-2.5">
+                        <div className="flex h-8 w-8 items-center justify-center rounded bg-zinc-100 text-lg leading-none font-bold text-zinc-950 transition-transform group-hover:scale-105">
                             Z
                         </div>
                         <span className="text-lg font-semibold tracking-tight text-zinc-100">
@@ -37,6 +37,12 @@ export default function Navigation({
                                     className="text-zinc-400 transition-colors hover:text-zinc-100"
                                 >
                                     Workspace
+                                </Link>
+                                <Link
+                                    href={verify()}
+                                    className="text-zinc-400 transition-colors hover:text-zinc-100"
+                                >
+                                    Verify
                                 </Link>
                             </>
                         ) : (

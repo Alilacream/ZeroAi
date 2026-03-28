@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Laravel\Socialite\Facades\Socialite;
@@ -16,6 +17,13 @@ class SocialiteController extends Controller
      */
     public function redirectToProvider($provider)
     {
+        // Add required scopes for GitHub to access user emails
+        if ($provider === 'github') {
+            return Socialite::driver($provider)
+                ->scopes(['user:email'])
+                ->redirect();
+        }
+
         return Socialite::driver($provider)->redirect();
     }
 
@@ -48,33 +56,9 @@ class SocialiteController extends Controller
         // Get email - handle the case where GitHub might not return email in the main object
         $email = $providerUser->getEmail();
 
-        // For GitHub, if email is null, we need to fetch it from the emails array
-        if (! $email && $provider === 'github' && isset($providerUser->user['emails'])) {
-            $emails = $providerUser->user['emails'];
-
-            // Look for primary and verified email first
-            foreach ($emails as $emailData) {
-                if (isset($emailData['primary']) && $emailData['primary'] === true &&
-                    isset($emailData['verified']) && $emailData['verified'] === true) {
-                    $email = $emailData['email'];
-                    break;
-                }
-            }
-
-            // If no primary verified email, look for any verified email
-            if (! $email) {
-                foreach ($emails as $emailData) {
-                    if (isset($emailData['verified']) && $emailData['verified'] === true) {
-                        $email = $emailData['email'];
-                        break;
-                    }
-                }
-            }
-
-            // If still no email, use the first email available
-            if (! $email && ! empty($emails)) {
-                $email = $emails[0]['email'] ?? null;
-            }
+        // For GitHub, if email is null, fetch it from the emails API endpoint
+        if (! $email && $provider === 'github' && $providerUser->token) {
+            $email = $this->getGitHubUserEmail($providerUser->token);
         }
 
         // If we still don't have an email, we can't create the user
@@ -104,7 +88,7 @@ class SocialiteController extends Controller
             // User exists with same email but different provider (or no provider) - link account
             $user = $existingUserByEmail;
             $user->{$provider.'_id'} = $providerUser->getId();
-             if (is_null($user->email_verified_at)) {
+            if (is_null($user->email_verified_at)) {
                 $user->email_verified_at = now();
                 $user->save();
             } else {
@@ -132,7 +116,52 @@ class SocialiteController extends Controller
         Auth::login($user, true);
 
         request()->session()->regenerate();
-        // Redirect to dashboard
-        return redirect()->intended('/');
+
+        // Redirect to dashboard (Fortify's home path)
+        return redirect()->intended('/dashboard');
+    }
+
+    /**
+     * Fetch the user's primary email from GitHub API.
+     * GitHub requires the user:email scope and returns emails via a separate endpoint.
+     */
+    private function getGitHubUserEmail(string $token): ?string
+    {
+        try {
+            $response = Http::withHeaders([
+                'Accept' => 'application/vnd.github.v3+json',
+                'Authorization' => 'token '.$token,
+            ])->get('https://api.github.com/user/emails');
+
+            if ($response->successful()) {
+                $emails = $response->json();
+
+                // Look for primary and verified email first
+                foreach ($emails as $emailData) {
+                    if (isset($emailData['primary']) && $emailData['primary'] === true &&
+                        isset($emailData['verified']) && $emailData['verified'] === true) {
+                        return $emailData['email'];
+                    }
+                }
+
+                // If no primary verified email, look for any verified email
+                foreach ($emails as $emailData) {
+                    if (isset($emailData['verified']) && $emailData['verified'] === true) {
+                        return $emailData['email'];
+                    }
+                }
+
+                // If still no email, use the first email available
+                if (! empty($emails)) {
+                    return $emails[0]['email'] ?? null;
+                }
+            }
+        } catch (\Exception $e) {
+            Log::error('Failed to fetch GitHub user email', [
+                'error' => $e->getMessage(),
+            ]);
+        }
+
+        return null;
     }
 }

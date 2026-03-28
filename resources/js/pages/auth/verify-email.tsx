@@ -1,44 +1,56 @@
-// Components
-import { Form, Head } from '@inertiajs/react';
-import TextLink from '@/components/text-link';
+import { Head, Link, useForm } from '@inertiajs/react';
 import { Button } from '@/components/ui/button';
 import { Spinner } from '@/components/ui/spinner';
 import AuthLayout from '@/layouts/auth-layout';
-import { logout } from '@/routes';
-import { send } from '@/routes/verification';
+import { chat } from '@/routes';
+import { resend } from '@/routes/verification';
 
-export default function VerifyEmail({ status }: { status?: string }) {
+interface Props {
+    status?: string;
+}
+
+export default function VerifyEmail({ status }: Props) {
+    const { post, processing } = useForm({});
+
+    const resendVerification = () => {
+        post(resend().url);
+    };
+
     return (
         <AuthLayout
-            title="Verify email"
+            title="Verify Email"
             description="Please verify your email address by clicking on the link we just emailed to you."
         >
-            <Head title="Email verification" />
+            <Head title="Email Verification" />
 
             {status === 'verification-link-sent' && (
-                <div className="mb-4 text-center text-sm font-medium text-green-600">
-                    A new verification link has been sent to the email address
-                    you provided during registration.
+                <div className="mb-4 rounded-md bg-green-50 p-4 text-center text-sm text-green-600">
+                    A new verification link has been sent to your email address.
                 </div>
             )}
 
-            <Form {...send.form()} className="space-y-6 text-center">
-                {({ processing }) => (
-                    <>
-                        <Button disabled={processing} variant="secondary">
-                            {processing && <Spinner />}
-                            Resend verification email
-                        </Button>
+            <form
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    resendVerification();
+                }}
+                className="space-y-6 text-center"
+            >
+                <Button type="submit" disabled={processing} variant="secondary">
+                    {processing && <Spinner />}
+                    Resend Verification Email
+                </Button>
 
-                        <TextLink
-                            href={logout()}
-                            className="mx-auto block text-sm"
-                        >
-                            Log out
-                        </TextLink>
-                    </>
-                )}
-            </Form>
+                <div className="text-sm">
+                    <Link
+                        href={chat()}
+                        method="post"
+                        className="text-muted-foreground hover:text-primary"
+                    >
+                        Go to workspace
+                    </Link>
+                </div>
+            </form>
         </AuthLayout>
     );
 }

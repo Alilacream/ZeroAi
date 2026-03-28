@@ -7,4 +7,3 @@ use Illuminate\Support\Facades\Route;
 Route::post('/chat', [ChatbotController::class, 'send']);
 
 Route::post('/scans', [ScanController::class, 'analyze']);
-

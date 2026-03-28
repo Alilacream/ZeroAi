@@ -1,0 +1,469 @@
+/* ─── ZeroAI Waitlist Page Styles ─────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=IBM+Plex+Mono:wght@300;400;500&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap');
+
+/* ─── CSS Variables ───────────────────────────────────────────────────────── */
+:root {
+    --bg: #080808;
+    --bg-dim: #0e0e0e;
+    --white: #f2ede6;
+    --cream: #c4b99a;
+    --muted: #3a3a3a;
+    --border: rgba(242, 237, 230, 0.09);
+    --border-mid: rgba(242, 237, 230, 0.18);
+    --red: #e63b2e;
+    --green: #00e87a;
+    --ff-d: 'Bebas Neue', sans-serif;
+    --ff-m: 'IBM Plex Mono', monospace;
+    --ff-l: 'DM Mono', monospace;
+}
+
+/* ─── Base Styles ─────────────────────────────────────────────────────────── */
+.waitlist-page {
+    background: var(--bg);
+    color: var(--white);
+    font-family: var(--ff-m);
+    overflow-x: hidden;
+    cursor: none;
+}
+
+/* Noise overlay */
+.waitlist-page::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9998;
+    opacity: 0.032;
+}
+
+/* ─── Animations ──────────────────────────────────────────────────────────── */
+@keyframes fadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(110%);
+    }
+    to {
+        transform: none;
+    }
+}
+
+@keyframes blink {
+    0%,
+    100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.3;
+    }
+}
+
+@keyframes scan {
+    0% {
+        transform: translateX(-120%);
+    }
+    100% {
+        transform: translateX(120%);
+    }
+}
+
+@keyframes drip {
+    0% {
+        transform: scaleY(0);
+        transform-origin: top;
+        opacity: 0;
+    }
+    30% {
+        transform: scaleY(1);
+        transform-origin: top;
+        opacity: 1;
+    }
+    70% {
+        transform: scaleY(1);
+        transform-origin: bottom;
+        opacity: 1;
+    }
+    100% {
+        transform: scaleY(0);
+        transform-origin: bottom;
+        opacity: 0;
+    }
+}
+
+@keyframes marquee {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(-50%);
+    }
+}
+
+/* ─── Custom Cursor ───────────────────────────────────────────────────────── */
+#zai-cursor {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background: var(--white);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    mix-blend-mode: difference;
+    transition: width 0.15s ease, height 0.15s ease;
+    transform: translate(-50%, -50%);
+}
+
+#zai-cursor.big {
+    width: 44px;
+    height: 44px;
+}
+
+/* ─── Hero Section ────────────────────────────────────────────────────────── */
+.hero-grid-bg {
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(var(--border) 1px, transparent 1px),
+        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 72px 72px;
+    mask-image: radial-gradient(ellipse 70% 70% at center, black 10%, transparent 80%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 70% at center, black 10%, transparent 80%);
+    pointer-events: none;
+}
+
+.hero-cert-shimmer {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(242, 237, 230, 0.05) 50%,
+        transparent 100%
+    );
+    animation: scan 3.5s ease-in-out infinite;
+}
+
+.cert-dot-blink {
+    animation: blink 2s ease-in-out infinite;
+}
+
+.hero-word {
+    display: inline-block;
+    animation: slideUp 0.85s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.hero-line {
+    display: block;
+    overflow: hidden;
+}
+
+.scroll-drip {
+    animation: drip 2.2s ease-in-out infinite;
+}
+
+/* ─── Button Wipe Effect ──────────────────────────────────────────────────── */
+.btn-wipe {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+    font-family: var(--ff-d);
+    font-size: 19px;
+    letter-spacing: 0.12em;
+    color: var(--bg);
+    background: var(--white);
+    padding: 17px 52px;
+    text-decoration: none;
+    cursor: none;
+    transition: color 0.3s;
+}
+
+.btn-wipe::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--bg);
+    transform: translateX(-101%);
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-wipe:hover::before {
+    transform: translateX(0);
+}
+
+.btn-wipe:hover {
+    color: var(--white);
+    outline: 1px solid var(--white);
+}
+
+.btn-wipe span {
+    position: relative;
+    z-index: 1;
+}
+
+/* ─── Marquee ─────────────────────────────────────────────────────────────── */
+.marquee-track {
+    display: inline-block;
+    white-space: nowrap;
+    animation: marquee 28s linear infinite;
+}
+
+/* ─── Reveal on Scroll ────────────────────────────────────────────────────── */
+.reveal {
+    opacity: 0;
+    transform: translateY(28px);
+    transition:
+        opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.85s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.on {
+    opacity: 1;
+    transform: none;
+}
+
+/* ─── Problem Section ─────────────────────────────────────────────────────── */
+.prob-cell-hover {
+    position: relative;
+    overflow: hidden;
+}
+
+.prob-cell-hover::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--bg);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.prob-cell-hover:hover::after {
+    transform: scaleX(1);
+}
+
+/* ─── How It Works ────────────────────────────────────────────────────────── */
+.how-card-hover {
+    position: relative;
+}
+
+.how-card-hover::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--white), transparent);
+    opacity: 0;
+    transform: scaleX(0);
+    transition: opacity 0.4s, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.how-card-hover:hover::before {
+    opacity: 0.25;
+    transform: scaleX(1);
+}
+
+/* ─── Who It's For Cards ──────────────────────────────────────────────────── */
+.who-card-enter {
+    opacity: 0;
+    transform: translateY(40px);
+    transition:
+        opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+        transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.who-card-enter.in {
+    opacity: 1;
+    transform: none;
+}
+
+.who-card-enter:nth-child(2) {
+    transition-delay: 100ms;
+}
+
+.who-card-enter:nth-child(3) {
+    transition-delay: 200ms;
+}
+
+.who-fill {
+    position: relative;
+    overflow: hidden;
+    cursor: none;
+}
+
+.who-fill::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--white);
+    transform: translateY(100%);
+    transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 0;
+}
+
+.who-fill:hover::before {
+    transform: translateY(0);
+}
+
+.who-fill::after {
+    content: '';
+    position: absolute;
+    top: 18px;
+    left: 18px;
+    width: 18px;
+    height: 18px;
+    border-top: 1px solid var(--border-mid);
+    border-left: 1px solid var(--border-mid);
+    transition: border-color 0.3s, width 0.3s, height 0.3s;
+}
+
+.who-fill:hover::after {
+    border-color: var(--bg);
+    width: 24px;
+    height: 24px;
+}
+
+.who-fill:hover .who-idx-el {
+    color: var(--bg) !important;
+    opacity: 0.4 !important;
+}
+
+.who-fill:hover .who-h3-el {
+    color: var(--bg) !important;
+}
+
+.who-fill:hover .who-tag-el {
+    border-color: rgba(8, 8, 8, 0.2) !important;
+    color: var(--bg) !important;
+    opacity: 0.55 !important;
+}
+
+.who-fill:hover .who-p-el {
+    color: var(--bg) !important;
+    opacity: 0.65 !important;
+}
+
+.who-fill:hover .who-arrow-el {
+    opacity: 1 !important;
+    transform: translate(0, 0) !important;
+    color: var(--bg) !important;
+}
+
+/* ─── Waitlist Form ───────────────────────────────────────────────────────── */
+.waitlist-input {
+    flex: 1;
+    font-family: var(--ff-m);
+    font-size: 13px;
+    padding: 16px 20px;
+    border: 1px solid rgba(8, 8, 8, 0.18);
+    border-right: none;
+    background: transparent;
+    color: var(--bg);
+    outline: none;
+    transition: border-color 0.2s;
+    min-width: 0;
+}
+
+.waitlist-input:focus {
+    border-color: var(--bg);
+}
+
+.waitlist-input:disabled {
+    opacity: 0.6;
+}
+
+.waitlist-btn {
+    font-family: var(--ff-d);
+    font-size: 16px;
+    letter-spacing: 0.1em;
+    color: var(--white);
+    background: var(--bg);
+    border: 1px solid var(--bg);
+    padding: 16px 36px;
+    cursor: none;
+    transition: background 0.2s;
+    white-space: nowrap;
+}
+
+.waitlist-btn:not(:disabled):hover {
+    background: #1a1a1a;
+}
+
+.waitlist-btn:disabled {
+    background: #4a4a4a;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* ─── Snackbar Notification ───────────────────────────────────────────────── */
+.snackbar {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 9999;
+    animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.snackbar-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 24px;
+    font-family: var(--ff-m);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.24);
+    min-width: 280px;
+    max-width: 420px;
+}
+
+.snackbar-success {
+    background: var(--bg);
+    color: var(--white);
+}
+
+.snackbar-error {
+    background: var(--red);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.snackbar-close {
+    background: transparent;
+    border: none;
+    color: inherit;
+    cursor: none;
+    padding: 4px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.snackbar-close:hover {
+    opacity: 1;
+}
+
+/* ─── Utility Classes ─────────────────────────────────────────────────────── */
+.text-gradient-cream {
+    color: var(--cream);
+    opacity: 0.38;
+}
+
+.border-cream-mid {
+    border-color: var(--border-mid);
+}

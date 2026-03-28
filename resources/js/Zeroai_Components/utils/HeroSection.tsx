@@ -58,11 +58,11 @@ export function HeroSection() {
                             whileTap={{ scale: 0.98 }}
                         >
                             <Link
-                                href="#documentation" // Or wherever this should point
+                                href="/waitlist" // Or wherever this should point
                                 className="flex h-12 items-center gap-2 rounded-md border border-zinc-800 bg-transparent px-8 text-sm font-medium text-zinc-300 transition-colors hover:bg-zinc-900 hover:text-zinc-100"
                             >
                                 <Terminal className="h-4 w-4 text-zinc-500" />
-                                Read Documentation
+                                Join WaitList
                             </Link>
                         </motion.div>
                     </div>

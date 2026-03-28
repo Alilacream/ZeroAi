@@ -11,8 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('scans', function (Blueprint $table) {
-            //
+        Schema::create('wait_list', function (Blueprint $table) {
+            $table->id();
+            $table->string('email')->unique();
+            $table->timestamps();
         });
     }
 
@@ -21,8 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('scans', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('wait_list');
     }
 };

@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./vendor/bin/phpstan *)",
+      "Bash(composer *)",
+      "Bash(npx *)",
+      "Bash(php *)",
+      "Bash(grep *)"
+    ]
+  },
+  "$version": 3
+}

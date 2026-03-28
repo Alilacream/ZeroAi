@@ -52,7 +52,7 @@ class DeepfakeDetectionService
 
             if ($response->failed()) {
                 Log::error('Gradio API error: '.$response->body());
-                throw new \Exception('Failed to analyze media: '.$response->body());
+                throw new Exception('Failed to analyze media: '.$response->body());
             }
 
             // Process Gradio response

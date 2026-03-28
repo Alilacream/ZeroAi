@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -21,13 +20,13 @@ class ScanController extends Controller
         $dataUri = "{$mimeType};base64,{$base64Data}";
 
         $hfToken = env('HF_TOKEN');
-        if (!$hfToken) {
+        if (! $hfToken) {
             return response()->json(['message' => 'HF_TOKEN missing in .env'], 500);
         }
 
         try {
             // Use your NEW space URL
-            $baseUrl = "https://alilacream-truthseeker.hf.space/gradio_api/call/predict_deepfake";
+            $baseUrl = 'https://alilacream-truthseeker.hf.space/gradio_api/call/predict_deepfake';
 
             Log::info('Submitting job to Gradio...', ['mime' => $mimeType]);
 
@@ -36,25 +35,25 @@ class ScanController extends Controller
                 'Authorization' => "Bearer {$hfToken}",
                 'Content-Type' => 'application/json',
             ])->post($baseUrl, [
-                "data" => [$dataUri],
-                "fn_index" => 0,
+                'data' => [$dataUri],
+                'fn_index' => 0,
             ]);
 
             if ($submitResponse->failed()) {
-                throw new \Exception("Submit failed: " . $submitResponse->body());
+                throw new \Exception('Submit failed: '.$submitResponse->body());
             }
 
             $submitData = $submitResponse->json();
 
-            if (!isset($submitData['event_id'])) {
+            if (! isset($submitData['event_id'])) {
                 if (isset($submitData['data'])) {
                     return $this->parseResult($submitData);
                 }
-                throw new \Exception("No event_id received.");
+                throw new \Exception('No event_id received.');
             }
 
             $eventId = $submitData['event_id'];
-            Log::info('Job submitted. Event ID: ' . $eventId);
+            Log::info('Job submitted. Event ID: '.$eventId);
 
             // --- STEP 2: POLL ---
             $maxAttempts = 60;
@@ -71,8 +70,8 @@ class ScanController extends Controller
                 $pollResponse = Http::withHeaders([
                     'Authorization' => "Bearer {$hfToken}",
                 ])
-                ->timeout(60) // Increased timeout for polling
-                ->get($pollUrl);
+                    ->timeout(60) // Increased timeout for polling
+                    ->get($pollUrl);
 
                 if ($pollResponse->successful()) {
                     $pollData = $pollResponse->json();
@@ -89,17 +88,18 @@ class ScanController extends Controller
                 }
             }
 
-            if (!$finalResult) {
-                throw new \Exception("Timeout: Model took too long.");
+            if (! $finalResult) {
+                throw new \Exception('Timeout: Model took too long.');
             }
 
             return $this->parseResult($finalResult);
 
         } catch (\Exception $e) {
             Log::error('Scan Failed', ['error' => $e->getMessage()]);
+
             return response()->json([
                 'message' => 'Analysis Failed',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 503);
         }
     }
@@ -112,7 +112,7 @@ class ScanController extends Controller
     {
         $data = $result['data'] ?? null;
 
-        if (!$data || !is_array($data) || count($data) === 0) {
+        if (! $data || ! is_array($data) || count($data) === 0) {
             throw new \Exception('Invalid result structure: empty data');
         }
 
@@ -120,7 +120,7 @@ class ScanController extends Controller
         // Structure: [ { label: "AI_Generated", confidences: [...] } ]
         $predictionWrapper = $data[0];
 
-        if (!is_array($predictionWrapper)) {
+        if (! is_array($predictionWrapper)) {
             throw new \Exception('Invalid result structure: expected array at data[0]');
         }
 
@@ -147,7 +147,7 @@ class ScanController extends Controller
         return response()->json([
             'label' => $topLabel, // e.g., "AI_Generated"
             'confidences' => $confidencesList, // Pass the whole array for the UI cards
-            'raw_score' => $topConfidence
+            'raw_score' => $topConfidence,
         ]);
     }
 }
